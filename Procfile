@@ -1,1 +1,1 @@
-worker: python yt-data-crawler/src/dbtest.py
+worker: python yt-data-crawler/src/main.py
