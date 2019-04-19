@@ -1,4 +1,4 @@
 <?php
-// phpinfo();
-echo '<html><body><h1>hello</h1></body></html>';
+// phpinfo();z
+echo '<html><body><h1>hello world</h1></body></html>';
 ?>
