@@ -12,8 +12,8 @@ def add_chan_to_db(chan_data, table_name, conn, cur):
 	cur.execute('INSERT INTO  '+table_name+' VALUES (%s, %s, %s, %s, %s, %s, %s)', chan_data)
 	conn.commit()
 
-def test_add_chan(chan_data):
+def test_add_chan(chan_data, table_name):
 	with get_connection() as conn:
 		with conn.cursor() as cur:
-			add_chan_to_db(chan_data, 'youtubers', conn, cur)
+			add_chan_to_db(chan_data, table_name, conn, cur)
 		conn.commit()
