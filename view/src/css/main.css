@@ -1,0 +1,37 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{
+background-color: #F0F0FF;
+}
+
+.main_category_panel{
+	margin-top: 10px;
+	margin-right: 100px;
+	margin-left: 100px;
+	padding: 10px;
+	background-color: #DCDCDC;
+}
+
+.chan_container{
+}
+
+.clearfix:after {
+  clear: both;
+  content: '';
+  display: block;
+}
+
+.chan_box{
+    padding: 0.1em 0.1em;
+    margin: 0.5em 0.5em;
+    color: #5d627b;
+    background: white;
+    border-top: solid 5px #5d627b;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    float: left; 
+}
+.chan_box p {
+    margin: 0; 
+    padding: 0;
+}
