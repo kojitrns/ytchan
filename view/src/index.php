@@ -12,7 +12,8 @@ $youtube_url = 'https://www.youtube.com/channel/';
 function get_channel_cont($chan_data=null)
 {
 	global $youtube_url;
-	$chan_info = sprintf('<p>%s</p><p>%s</p><p>%s</p>',$chan_data['viewcount'],$chan_data['subscribercount'],$chan_data['videocount']);
+	$chan_info = "<p>{$chan_data['viewcount']}</p><p>{$chan_data['subscribercount']}</p><p>{$chan_data['videocount']}</p>";
+
 	$cont = sprintf('<img src="%s"><div class="chan_info_box">%s</div><a href="%s%s" target=_blank title="%s"><div class ="chan_title_box">%s</div></a>', $chan_data['thumbnailurl'], $chan_info, $youtube_url, $chan_data['channelid'],
 		$chan_data['channeltitle'] ,$chan_data['channeltitle']);
 	return '<div class="chan_box">'. $cont .'</div>';
@@ -35,24 +36,35 @@ function set_channel_database(&$category_list)
 	}
 }
 
+function show_header(&$category_list) {
+	foreach ($category_list as $maincategory => $sub_categories) {
+		echo "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$maincategory\">$maincategory</a> ";
+	}
+}
+
 // function init() {
 // }
 // $main_categories = file(__DIR__.'/main_category.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
 $category_list = array();
+$cur_category = '';
 set_channel_database($category_list);
+show_header($category_list);
+if(isset($_GET['cur_category'])) {
+	$cur_category = $_GET['cur_category'];
+} else {
+	$cur_category = 'ニュース';
+}
 
-foreach ($category_list as $maincategory => $sub_categories) {
-	echo "<div class=\"main_category_panel\"><h2>$maincategory</h2>";
-	foreach ($sub_categories as $subcategory => $rows) {
-		echo "<div class=\"chan_container clearfix\"><h3>$subcategory</h3>";
-		foreach ($rows as $row) {
-			echo get_channel_cont($row);
-		}
-		echo '</div>';
+echo "<div class=\"main_category_panel\"><h2>$cur_category</h2>";
+$sub_categories = $category_list[$cur_category];
+foreach ($sub_categories as $subcategory => $rows) {
+	echo "<div class=\"chan_container clearfix\"><h3>$subcategory</h3>";
+	foreach ($rows as $row) {
+		echo get_channel_cont($row);
 	}
 	echo '</div>';
 }
+echo '</div>';
 ?>
-
 </body></html>
