@@ -12,8 +12,9 @@ $youtube_url = 'https://www.youtube.com/channel/';
 function get_channel_cont($chan_data=null)
 {
 	global $youtube_url;
-	$cont = sprintf('<a href="%s%s" target=_blank title="%s"><img src="%s"></a>', $youtube_url, $chan_data['channelid'],
-		$chan_data['channeltitle'], $chan_data['thumbnailurl']);
+	$chan_info = sprintf('<p>%s</p><p>%s</p><p>%s</p>',$chan_data['viewcount'],$chan_data['subscribercount'],$chan_data['videocount']);
+	$cont = sprintf('<img src="%s"><div class="chan_info_box">%s</div><a href="%s%s" target=_blank title="%s"><div class ="chan_title_box">%s</div></a>', $chan_data['thumbnailurl'], $chan_info, $youtube_url, $chan_data['channelid'],
+		$chan_data['channeltitle'] ,$chan_data['channeltitle']);
 	return '<div class="chan_box">'. $cont .'</div>';
 }
 
