@@ -42,10 +42,10 @@ def get_sorted_channel_list(channels, target, size):
 		return chan_list[0:size]
 	return None
 
-def get_channel_detail_list(channels):
+def get_adding_channel_list(channels):
 	max_value = 0
 	chan_list = []
-	chan_idlist = []
+	chan_id_list = []
 
 	for chan in channels:
 		cur_chan = requests.get(
@@ -53,11 +53,19 @@ def get_channel_detail_list(channels):
 		    'part': 'statistics,snippet,brandingSettings',
 		    'id': chan['snippet']['channelId']}).json()
 		if ('items' in cur_chan) and cur_chan['items']:
-			if (cur_chan['items'][0]['id'] not in chan_idlist):
-				chan_list.append(cur_chan['items'][0])
-				chan_idlist.append(cur_chan['items'][0]['id'])
+			chan_data = cur_chan['items'][0]
+			if (chan_data['id'] not in chan_id_list and
+				evaluate_channel(chan_data)):
+				chan_list.append(chan_data)
+				chan_id_list.append(chan_data['id'])
 
 	return chan_list
+
+def evaluate_channel(chan_data):
+	at_least_value = 1000
+	stats = chan_data['statistics']
+	chan_value = int(stats['videoCount']) + int(stats['subscriberCount']) + int(stats['videoCount']);
+	return at_least_value < chan_value
 
 def chan_record_gen(chan_data, main_category, sub_category):
 #chan_data: channel resource
@@ -90,7 +98,7 @@ with open('category') as f:
 			if response is None:
 				print("%s %s" % (category,"None"))
 				continue
-			chan_list = get_channel_detail_list(response.json()['items'])
+			chan_list = get_adding_channel_list(response.json()['items'])
 
 			for chan in chan_list:
 				print(chan['snippet']['title'])
