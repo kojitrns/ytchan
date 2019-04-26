@@ -3,11 +3,12 @@
 
 body{
 	background-color: #F0F0FF;
+	margin: 0px;
 }
 
 .site-header {
 	width: 80%;
-	margin-left: 100px;
+	margin-left: 7%;
 	background-color: #DCDCDC;
 	position: fixed;
 }
@@ -18,13 +19,13 @@ body{
 
 .header-emb{
 	width: 100%;
-	height: 100px;
+	height: 50px;
 }
 
 .main-category-panel{
 	width: 80%;
 	margin-top: 10px;
-	margin-left: 100px;
+	margin-left: 7%;
 	padding: 10px;
 	background-color: #DCDCDC;
 }
@@ -54,6 +55,21 @@ body{
 	float: left;
 }
 
+.chan-info-box {
+	width: 60%;
+	height: 80%;
+	background-color: #CAD4CF;
+	float: right;
+}
+
+.counter-box{
+	margin: 10px;
+}
+
+.counter-box p{
+
+}
+
 .chan-title-box {
 	height: 20%;
 	background-color: #BEC1D8;
@@ -61,11 +77,4 @@ body{
     display: flex;
 	align-items: center;
 	justify-content: center;
-}
-
-.chan-info-box {
-	width: 60%;
-	height: 80%;
-	background-color: #CAD4CF;
-	float: right;
 }
