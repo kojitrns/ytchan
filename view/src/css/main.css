@@ -2,27 +2,43 @@
 /* CSS Document */
 
 body{
-background-color: #F0F0FF;
+	background-color: #F0F0FF;
 }
 
-.main_category_panel{
+.site-header {
+	width: 80%;
+	margin-left: 100px;
+	background-color: #DCDCDC;
+	position: fixed;
+}
+
+.site-header h4{
+	margin: 5px;
+}
+
+.header-emb{
+	width: 100%;
+	height: 100px;
+}
+
+.main-category-panel{
+	width: 80%;
 	margin-top: 10px;
-	margin-right: 100px;
 	margin-left: 100px;
 	padding: 10px;
 	background-color: #DCDCDC;
 }
 
-.chan_container{
+.chan-container{
 }
 
 .clearfix:after {
-  clear: both;
-  content: '';
-  display: block;
+	clear: both;
+	content: '';
+	display: block;
 }
 
-.chan_box{
+.chan-box{
 	width: 300px;
 	height: 200px;
     margin: 7px 7px;
@@ -32,13 +48,13 @@ background-color: #F0F0FF;
     float: left;
 }
 
-.chan_box img {
+.chan-box img {
 	width: 40%;
 	height: 80%;
 	float: left;
 }
 
-.chan_title_box {
+.chan-title-box {
 	height: 20%;
 	background-color: #BEC1D8;
     clear: both;
@@ -47,7 +63,7 @@ background-color: #F0F0FF;
 	justify-content: center;
 }
 
-.chan_info_box {
+.chan-info-box {
 	width: 60%;
 	height: 80%;
 	background-color: #CAD4CF;
