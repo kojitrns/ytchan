@@ -74,7 +74,7 @@ with open('category') as f:
 	min_chan_num = 4
 	for category in l:
 		category = category[:-1]
-		if len(category) > 2 :
+		if len(category) >= 1 :
 			if category.startswith('*'):
 				main_category = category[1:]
 				print('***'+main_category)
@@ -88,16 +88,18 @@ with open('category') as f:
 				'part': 'snippet', 'q': category, 'order': 'viewCount', 'regionCode': 'JP', 'maxResults': results_num})
 				# chan_list = get_sorted_channel_list(response.json()['items'], 'subscriberCount', higher_num)
 			if response is None:
+				print("%s %s" % (category,"None"))
 				continue
 			chan_list = get_channel_detail_list(response.json()['items'])
 
 			for chan in chan_list:
 				print(chan['snippet']['title'])
-			if len(chan_list) < min_chan_num:
-				continue
-			if chan_list is not None:
-				recs = []
-				for chan in chan_list:
-					recs.append(chan_record_gen(chan, main_category ,category))
-				db.test_add_chan(recs, 'channel')
 
+			if len(chan_list) < min_chan_num:
+				print("%s %d" % (category, len(chan_list)))
+				continue
+
+			recs = []
+			for chan in chan_list:
+				recs.append(chan_record_gen(chan, main_category ,category))
+			db.test_add_chan(recs, 'channel')
