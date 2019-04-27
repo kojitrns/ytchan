@@ -22,6 +22,13 @@ body{
 	height: 50px;
 }
 
+.left-panel{
+	width: 6%;
+	float: left;
+	background-color: #DCDCDC;
+	position: fixed;
+}
+
 .main-category-panel{
 	width: 80%;
 	margin-top: 10px;

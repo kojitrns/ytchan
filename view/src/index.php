@@ -35,11 +35,20 @@ function set_channel_database(&$category_list)
 }
 
 function show_header(&$category_list) {
-	echo '<header class="site-header"><nav><h4>カテゴリ</h4>';
+	echo '<header class="site-header"><nav><b>カテゴリ:</b>';
 	foreach ($category_list as $maincategory => $sub_categories) {
 		echo "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$maincategory\">$maincategory</a> ";
 	}
 	echo '</nav></header><div class="header-emb"></div>';
+}
+
+
+function show_left_panel(&$sub_categories) {
+	echo '<div class="left-panel">';
+	foreach ($sub_categories as $sub_category) {
+		echo "<a href=\"#$sub_category\">・$sub_category</a></br> ";
+	}
+	echo '</div>';
 }
 
 // function init() {
@@ -57,10 +66,12 @@ if(isset($_GET['cur_category'])) {
 	$cur_category = 'ニュース';
 }
 
+show_left_panel(array_keys($category_list[$cur_category]));
+
 echo "<div class=\"main-category-panel\"><h2>$cur_category</h2>";
 $sub_categories = $category_list[$cur_category];
 foreach ($sub_categories as $subcategory => $rows) {
-	echo "<div class=\"chan-container clearfix\"><h3>$subcategory</h3>";
+	echo "<div class=\"chan-container clearfix\"><h3 id=\"$subcategory\">$subcategory</h3>";
 	foreach ($rows as $row) {
 		echo get_channel_cont($row);
 	}
