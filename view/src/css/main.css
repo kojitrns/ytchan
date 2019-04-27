@@ -31,13 +31,24 @@ body{
 
 .main-category-panel{
 	width: 80%;
+	padding-top: 10px;
 	margin-top: 10px;
 	margin-left: 7%;
-	padding: 10px;
 	background-color: #DCDCDC;
 }
 
+.main-category-panel h2{
+	margin: 5px;
+}
+
 .chan-container{
+	margin-top: 15px;
+	margin: 10px;
+}
+
+.chan-container h3{
+	margin-top: -50px;
+	padding-top: 50px;
 }
 
 .clearfix:after {
@@ -47,7 +58,8 @@ body{
 }
 
 .chan-box{
-	width: 300px;
+	width: 30%;
+	min-width: 200px;
 	height: 200px;
     margin: 7px 7px;
 	background-color: #CAD4CF;

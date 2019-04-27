@@ -71,7 +71,7 @@ show_left_panel(array_keys($category_list[$cur_category]));
 echo "<div class=\"main-category-panel\"><h2>$cur_category</h2>";
 $sub_categories = $category_list[$cur_category];
 foreach ($sub_categories as $subcategory => $rows) {
-	echo "<div class=\"chan-container clearfix\"><h3 id=\"$subcategory\">$subcategory</h3>";
+	echo "<div class=\"chan-container clearfix\"><h3 id=\"$subcategory\">■$subcategory</h3>";
 	foreach ($rows as $row) {
 		echo get_channel_cont($row);
 	}
