@@ -60,7 +60,7 @@ body{
 .chan-box{
 	width: 23%;
 	min-width: 200px;
-	height: 200px;
+	height: 180px;
     margin: 7px 7px;
 	background-color: #CAD4CF;
     border: solid 2px #5d627b;
@@ -86,12 +86,29 @@ body{
 }
 
 .counter-box p{
+	margin: 2px;
+}
 
+.detail-box {
+	margin: 10px;
+}
+
+.detail-box p{
+	width: 350px;
+	position: absolute;
+	border: 10px;
+	z-index: 1;
+	visibility: hidden;
+	background-color: #E6E8BA;
+}
+
+.detail-box:hover p{
+	visibility: visible;
 }
 
 .chan-title-box {
 	height: 20%;
-	background-color: #BEC1D8;
+	background-color:#BEC1D8;
     clear: both;
     display: flex;
 	align-items: center;

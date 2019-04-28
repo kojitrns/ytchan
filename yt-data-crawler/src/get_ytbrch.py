@@ -27,11 +27,13 @@ def get_highest_chan(channels, target):
 	return ret_chan
 
 def chan_record_gen(chan_data, main_name, sub_name):
-#chan_data: channel resource
-#chandata (channelId, channelTitle, channelType, viewCount, videoCount, subscriberCount, thumbnail_url )
 	stat = chan_data['statistics']
+	description = chan_data['snippet']['description']
+	keywords = ''
+	if 'keywords' in chan_data['brandingSettings']['channel']:
+		keywords = chan_data['brandingSettings']['channel']['keywords']
 	return (main_name, sub_name, chan_data['id'], chan_data['snippet']['title'], stat['viewCount'], stat['videoCount'], stat['subscriberCount'],
-		chan_data['snippet']['thumbnails']['default']['url'])
+		chan_data['snippet']['thumbnails']['default']['url'], description, keywords)
 
 results_num = 5
 higher_num = 5

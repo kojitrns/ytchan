@@ -69,10 +69,16 @@ def evaluate_channel(chan_data):
 
 def chan_record_gen(chan_data, main_category, sub_category):
 #chan_data: channel resource
-#chandata (channelId, channelTitle, channelType, viewCount, videoCount, subscriberCount, thumbnail_url )
+#chandata (channelId, channelTitle, channelType, viewCount, videoCount, subscriberCount, thumbnail_url ,
+#description, keywowrds;
 	stat = chan_data['statistics']
+	description = chan_data['snippet']['description']
+	keywords = ''
+	if 'keywords' in chan_data['brandingSettings']['channel']:
+		keywords = chan_data['brandingSettings']['channel']['keywords']
+
 	return (main_category, sub_category, chan_data['id'], chan_data['snippet']['title'], stat['viewCount'], stat['videoCount'], stat['subscriberCount'],
-		chan_data['snippet']['thumbnails']['default']['url'])
+		chan_data['snippet']['thumbnails']['medium']['url'], description, keywords)
 
 results_num = 10
 higher_num = 5
