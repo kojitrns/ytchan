@@ -2,7 +2,7 @@
 import sys
 import pprint
 import requests
-import dbtest as db
+import db_handler as db
 from operator import itemgetter
 
 # sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
@@ -74,15 +74,17 @@ def chan_record_gen(chan_data, main_category, sub_category):
 	return (main_category, sub_category, chan_data['id'], chan_data['snippet']['title'], stat['viewCount'], stat['videoCount'], stat['subscriberCount'],
 		chan_data['snippet']['thumbnails']['default']['url'])
 
+results_num = 10
+higher_num = 5
+min_chan_num = 4
+main_category = ''
+table_name = 'channel'
+
 with open('category') as f:
 	l = f.readlines()
-	results_num = 10
-	higher_num = 5
-	main_category = ''
-	min_chan_num = 4
 	for category in l:
 		category = category[:-1]
-		if len(category) >= 1 :
+		if len(category) >= 1:
 			if category.startswith('*'):
 				main_category = category[1:]
 				print('***'+main_category)
@@ -110,4 +112,4 @@ with open('category') as f:
 			recs = []
 			for chan in chan_list:
 				recs.append(chan_record_gen(chan, main_category ,category))
-			db.test_add_chan(recs, 'channel')
+			db.add_channels(recs, table_name)
