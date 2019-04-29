@@ -93,7 +93,7 @@ body{
 	margin: 10px;
 }
 
-.detail-box p{
+.description p{
 	width: 350px;
 	position: absolute;
 	border: 10px;
@@ -102,7 +102,20 @@ body{
 	background-color: #E6E8BA;
 }
 
-.detail-box:hover p{
+.description:hover p{
+	visibility: visible;
+}
+
+.keywords p{
+	width: 350px;
+	position: absolute;
+	border: 10px;
+	z-index: 1;
+	visibility: hidden;
+	background-color: #E6E8BA;
+}
+
+.keywords:hover p{
 	visibility: visible;
 }
 
