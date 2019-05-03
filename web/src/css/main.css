@@ -68,15 +68,20 @@ body{
     float: left;
 }
 
+/*.chan-box:hover {
+	width: 40%;
+	height: 250px;
+}*/
+
 .chan-box img {
 	width: 40%;
-	height: 80%;
+	height: 75%;
 	float: left;
 }
 
 .chan-info-box {
 	width: 60%;
-	height: 80%;
+	height: 75%;
 	background-color: #CAD4CF;
 	float: right;
 }
@@ -120,7 +125,7 @@ body{
 }
 
 .chan-title-box {
-	height: 20%;
+	height: 25%;
 	background-color:#BEC1D8;
     clear: both;
     display: flex;
