@@ -9,22 +9,31 @@
 $youtube_url = 'https://www.youtube.com/channel/';
 // header('Content-Type: application/json');
 
+function digit_handler($num) {
+	if($num > 1000000000) return number_format(round($num/1000000)).' M';
+	if($num > 100000) return number_format(round($num/1000)).' K';
+	return number_format($num);
+}
+
 function get_channel_cont($chan_data=null)
 {
 	global $youtube_url;
 	$description = '';
 	$keywords = '';
 	if (strlen($chan_data['description'])) {
-		$description = "<span class=\"description\">説明<p>{$chan_data['description']}</p></span>";
+		$description = "<span class=\"description\">説明 <p>{$chan_data['description']}</p></span>";
 	}
 	if (strlen($chan_data['keywords'])) {
-		$keywords = "<span class=\"keywords\"> 関連語<p>{$chan_data['keywords']}</p></span>";
+		$keywords = "<span class=\"keywords\">関連語 <p>{$chan_data['keywords']}</p></span>";
 	}
 	$social_blade = "<a href=\"https://socialblade.com/youtube/channel/{$chan_data['channelid']}\" target=_blank> sbinfo</a>";
+	$viewcount = digit_handler($chan_data['viewcount']);
+	$videocount = digit_handler($chan_data['videocount']);
+	$subscribercount = digit_handler($chan_data['subscribercount']);
 
 	$chan_detail = "<div class=\"detail-box\">$description$keywords$social_blade</div>";
 
-	$chan_info = "<div class=\"counter-box\"><p>{$chan_data['viewcount']}</p><p>{$chan_data['subscribercount']}</p><p>{$chan_data['videocount']}</p></div>$chan_detail";
+	$chan_info = "<div class=\"counter-box\"><p>$viewcount</p><p>$subscribercount</p><p>$subscribercount</p></div>$chan_detail";
 	$cont = sprintf('<img src="%s"><div class="chan-info-box">%s</div><div class ="chan-title-box"><a href="%s%s" target=_blank title="%s">%s</a></div>', $chan_data['thumbnailurl'], $chan_info, $youtube_url, $chan_data['channelid'], $chan_data['channeltitle'] ,$chan_data['channeltitle']);
 	return '<div class="chan-box">'. $cont .'</div>';
 }
