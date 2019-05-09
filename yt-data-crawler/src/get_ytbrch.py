@@ -59,4 +59,4 @@ with open('youtubers') as f:
 
 			chan_data = get_highest_chan(response.json()['items'], 'viewCount')
 			print(chan_data['snippet']['title'])
-			db.add_channel([chan_record_gen(chan_data, main_category ,sub_category)], table_name)
+			db.add_channels([chan_record_gen(chan_data, main_category ,sub_category)], table_name)

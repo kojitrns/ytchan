@@ -50,7 +50,7 @@ def get_adding_channel_list(channels):
 	for chan in channels:
 		cur_chan = requests.get(
 		    reqPprefix+'channels?', params={'key': api_key,
-		    'part': 'statistics,snippet,brandingSettings',
+		    'part': 'statistics,snippet,brandingSettings,contentDetails',
 		    'id': chan['snippet']['channelId']}).json()
 		if ('items' in cur_chan) and cur_chan['items']:
 			chan_data = cur_chan['items'][0]
@@ -64,21 +64,17 @@ def get_adding_channel_list(channels):
 def evaluate_channel(chan_data):
 	at_least_value = 1000
 	stats = chan_data['statistics']
+	if int(stats['videoCount']) < 1:
+		return False
 	chan_value = int(stats['videoCount']) + int(stats['subscriberCount']) + int(stats['videoCount']);
 	return at_least_value < chan_value
 
-def chan_record_gen(chan_data, main_category, sub_category):
-#chan_data: channel resource
-#chandata (channelId, channelTitle, channelType, viewCount, videoCount, subscriberCount, thumbnail_url ,
-#description, keywowrds;
-	stat = chan_data['statistics']
-	description = chan_data['snippet']['description']
-	keywords = ''
-	if 'keywords' in chan_data['brandingSettings']['channel']:
-		keywords = chan_data['brandingSettings']['channel']['keywords']
+def get_latest_video(playlist_id):
+	return requests.get(
+	    reqPprefix+'playlistItems?', params={'key': api_key,
+	    'part': 'snippet', 'playlistId': playlist_id,
+	    'maxResults': 1}).json()
 
-	return (main_category, sub_category, chan_data['id'], chan_data['snippet']['title'], stat['viewCount'], stat['videoCount'], stat['subscriberCount'],
-		chan_data['snippet']['thumbnails']['medium']['url'], description, keywords)
 
 results_num = 10
 higher_num = 5
@@ -102,20 +98,17 @@ with open('category') as f:
 				reqPprefix+'search?',
 				params={'key':api_key, 'type': 'channel',
 				'part': 'snippet', 'q': category, 'order': 'viewCount', 'regionCode': 'JP', 'maxResults': results_num})
-				# chan_list = get_sorted_channel_list(response.json()['items'], 'subscriberCount', higher_num)
+
 			if response is None:
 				print("%s %s" % (category,"None"))
 				continue
 			chan_list = get_adding_channel_list(response.json()['items'])
 
-			for chan in chan_list:
-				print(chan['snippet']['title'])
-
 			if len(chan_list) < min_chan_num:
-				print("%s %d" % (category, len(chan_list)))
+				print("shortage category %s %d" % (category, len(chan_list)))
 				continue
 
 			recs = []
 			for chan in chan_list:
-				recs.append(chan_record_gen(chan, main_category ,category))
+				recs.append(db.chan_record_gen(chan, main_category ,category))
 			db.add_channels(recs, table_name)
