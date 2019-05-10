@@ -1,0 +1,179 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{
+	background-color: #F0F0FF;
+	margin: 0px;
+}
+
+.site-header {
+	width: 80%;
+	margin-left: 7%;
+	background-color: #DCDCDC;
+	position: fixed;
+}
+
+.site-header h4{
+	margin: 5px;
+}
+
+.header-emb{
+	width: 100%;
+	height: 50px;
+}
+
+.left-panel{
+	width: 6%;
+	float: left;
+	background-color: #DCDCDC;
+	position: fixed;
+}
+
+.left-panel p{
+	margin: 3px;
+}
+
+.main-category-panel{
+	width: 80%;
+	padding-top: 10px;
+	margin-top: 10px;
+	margin-left: 7%;
+	background-color: #DCDCDC;
+	float: left;
+}
+
+.main-category-panel h2{
+	margin: 5px;
+}
+
+.chan-container{
+	margin-top: 15px;
+	margin: 10px;
+}
+
+.chan-container h3{
+	margin-top: -50px;
+	padding-top: 50px;
+}
+
+.clearfix:after {
+	clear: both;
+	content: '';
+	display: block;
+}
+
+.chan-box{
+	width: 23%;
+	min-width: 200px;
+	height: 180px;
+    margin: 7px 7px;
+	background-color: #CAD4CF;
+    border: solid 2px #5d627b;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    float: left;
+}
+
+/*.chan-box:hover {
+	width: 40%;
+	height: 250px;
+}*/
+
+{.chan-box .selected-chan-box} img {
+	width: 40%;
+	height: 75%;
+	float: left;
+}
+
+.chan-info-box {
+	width: 60%;
+	height: 75%;
+	background-color: #CAD4CF;
+	float: right;
+}
+
+.counter-box{
+	margin: 10px;
+}
+
+.counter-box p{
+	margin: 2px;
+}
+
+.detail-box {
+	margin: 10px;
+}
+
+.description p{
+	width: 350px;
+	position: absolute;
+	border: 10px;
+	z-index: 1;
+	visibility: hidden;
+	background-color: #E6E8BA;
+}
+
+.description:hover p{
+	visibility: visible;
+}
+
+.keywords p{
+	width: 350px;
+	position: absolute;
+	border: 10px;
+	z-index: 1;
+	visibility: hidden;
+	background-color: #E6E8BA;
+}
+
+.keywords:hover p{
+	visibility: visible;
+}
+
+.chan-title-box {
+	height: 25%;
+	background-color:#BEC1D8;
+    clear: both;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.selected-title-box{
+	height: 25%;
+	background-color:#BEC100;
+    clear: both;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#chanManager {
+}
+
+.controlPanel {
+	width: 14%;
+	height: 400px;
+	margin: 5px;
+	background-color: #DCDCDC;
+	left: 86%;
+	top: 50px;
+	position: fixed;
+}
+
+input {
+	width: 90%;
+	margin: 4%;
+}
+
+button {
+	margin-left: 2px;
+	margin-right: 2px;
+}
+
+select {
+	width: 70%;
+}
+
+.nav-link {
+	padding: 0.1rem 0.5rem;
+}
