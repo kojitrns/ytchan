@@ -17,7 +17,7 @@ def update_channel_data(conn, cur, channel_id, main_category, sub_category):
 	db.delete_channel(channel_id, cur)
 	chan_data = ytapi.get_channel_data(channel_id)
 	row = [db.chan_record_gen(chan_data, main_category, sub_category)]
-	db.add_channel_to_db(row, 'channel', conn, cur)
+	db.add_channels_to_db(row, 'channel', conn, cur)
 
 def is_valid_channel(chan_data):
 	return chan_data[DATA_ROW_MAPPING['viewCount']] > 0
@@ -35,4 +35,3 @@ with db.get_connection() as conn:
 				db.delete_channel(row[DATA_ROW_MAPPING['channel_id']], cur)
 				print("delete")
 			print("%d %s %s %s" % (id, row[DATA_ROW_MAPPING['title']],row[DATA_ROW_MAPPING['main_category']],row[DATA_ROW_MAPPING['sub_category']]))
-		# update_channel_data(row[DATA_ROW_MAPPING['keywords']])
