@@ -1,5 +1,6 @@
 # coding: utf-8
 import pprint
+import time
 import db_handler as db
 import api_handler as ytapi
 
@@ -13,11 +14,18 @@ def init():
 		DATA_ROW_MAPPING[content] = id
 	pprint.pprint(DATA_ROW_MAPPING)
 
-def update_channel_data(conn, cur, channel_id, main_category, sub_category):
-	db.delete_channel(channel_id, cur)
-	chan_data = ytapi.get_channel_data(channel_id)
-	row = [db.chan_record_gen(chan_data, main_category, sub_category)]
-	db.add_data_with_conn(row, 'channel', conn, cur)
+def update_video_data(conn, cur, channel_id, uplist_id, main_category, sub_category):
+	db.delete_video(channel_id, cur)
+	video_data = ytapi.get_latest_video_data(uplist_id)
+	if video_data is None:
+		print("retry")
+		time.sleep(5)
+		video_data = ytapi.get_latest_video_data(uplist_id)
+		if video_data is None:
+			print("cant get")
+			return
+	row = [db.video_record_gen(video_data, main_category, sub_category)]
+	db.add_data_with_conn(row, 'video', conn, cur)
 
 def is_valid_channel(chan_data):
 	return chan_data[DATA_ROW_MAPPING['viewCount']] > 0
@@ -30,8 +38,6 @@ with db.get_connection() as conn:
 		rows = cur.fetchall()
 		for (id, row) in enumerate(rows):
 			if is_valid_channel(row):
-				update_channel_data(conn,cur,row[DATA_ROW_MAPPING['channel_id']],row[DATA_ROW_MAPPING['main_category']],row[DATA_ROW_MAPPING['sub_category']])
-			else:
-				db.delete_channel(row[DATA_ROW_MAPPING['channel_id']], cur)
-				print("delete")
-			print("%d %s %s %s" % (id, row[DATA_ROW_MAPPING['title']],row[DATA_ROW_MAPPING['main_category']],row[DATA_ROW_MAPPING['sub_category']]))
+				print(row[DATA_ROW_MAPPING['title']])
+				update_video_data(conn, cur, row[DATA_ROW_MAPPING['channel_id']], row[DATA_ROW_MAPPING['uploads_id']],
+					row[DATA_ROW_MAPPING['main_category']], row[DATA_ROW_MAPPING['sub_category']])
