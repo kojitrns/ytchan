@@ -78,7 +78,13 @@ body{
 	height: 250px;
 }*/
 
-{.chan-box .selected-chan-box} img {
+.chan-box img {
+	width: 40%;
+	height: 75%;
+	float: left;
+}
+
+.selected-chan-box img{
 	width: 40%;
 	height: 75%;
 	float: left;
@@ -148,6 +154,32 @@ body{
 }
 
 #chanManager {
+}
+
+.video-box {
+	margin: 18px;
+	width: 28%;
+	height: 200px;
+	float: left;
+}
+
+.video-box p {
+	width: 98%;
+	margin: 0px;
+	display: -webkit-box;
+	max-height: 2.2rem;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+	-webkit-line-clamp: 2;
+	font-size: 1.0rem;
+	font-weight: 500;
+	line-height: 1.1rem;
+}
+
+.video-box img {
+	width: 100%;
 }
 
 .controlPanel {

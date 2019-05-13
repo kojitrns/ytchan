@@ -4,22 +4,24 @@
 const myappAddr = "api/api.php"
 const ytAddr = "https://www.googleapis.com/youtube/v3/channels?"
 const apiKey = "AIzaSyD3R2gavNlItHEZWTt-_UOMEwFwMN5reiQ"
+const tableMap = {channelData: "channel", videoData: "video"}
 
 class Mgr extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {channelData: ["abc","def"], selectedChannelId: "none", curCategory: "ニュース",
+    this.state = {channelData: [], videoData: [], selectedChannelId: "none", curCategory: "ニュース",
       selectedCategory: "ニュース", selectedSubCategory: "地震"}
     // this.updateChannelId = this.updateChannelId.bind(this)
+    // this. = this..bind(this)
     this.onChangeCategorySelector = this.onChangeCategorySelector.bind(this)
     this.onChangeSubCategorySelector = this.onChangeSubCategorySelector.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
   }
 
-  processChannelData(channelData) {
+  processData(allData) {
     var res = []
-    channelData.forEach(data =>{
+    allData.forEach(data =>{
       if(data['maincategory']){
         if(res[data['maincategory']]==null)
           res[data['maincategory']]=[]
@@ -28,16 +30,28 @@ class Mgr extends React.Component {
         res[data['maincategory']][data['subcategory']].push(data)
       }
     })
+    allData.forEach(data =>{
+      if(data['main_category']){
+        if(res[data['main_category']]==null)
+          res[data['main_category']]=[]
+        res[data['main_category']].push(data)
+        // if(res[data['main_category']][data['sub_category']]==null)
+        //   res[data['main_category']][data['sub_category']]=[]
+        // res[data['main_category']][data['sub_category']].push(data)
+      }
+    })
+    console.log(res,allData)
     return res
   }
 
-  fetchData = () => {
-    console.log("fetchData called")
-    fetch(myappAddr)
+  fetchData(dataName) {
+    fetch(myappAddr, {
+      method: 'POST',
+      body: JSON.stringify({opType: "fetch", table: tableMap[dataName]})
+    })
       .then(res => res.json())
       .then(json => {
-        this.setState({channelData: this.processChannelData(json)})
-      // console.log(JSON.stringify(myJson));
+        this.setState({[dataName]: this.processData(json)})
     })
   }
 
@@ -102,7 +116,8 @@ class Mgr extends React.Component {
 
   componentDidMount() {
     console.log("componentDidMount")
-    this.fetchData()
+    this.fetchData("channelData")
+    this.fetchData("videoData")
     console.log(this.state)
   }
 
@@ -187,12 +202,29 @@ class Mgr extends React.Component {
       channelPanel.push(<div className="chan-container clearfix">{channelTable}</div>)
     })
 
+    const videoCont = []
+    if(this.state.videoData[this.state.curCategory]){
+      this.state.videoData[this.state.curCategory].forEach(data => {
+          videoCont.push(
+            <div className="video-box">
+              <a href={"https://www.youtube.com/watch?v=" + data['video_id']} target="_blank">
+              <img src = {data['thumbnail']} />
+              <p>{data['video_title']}</p></a>
+              <a href={"https://www.youtube.com/channel/" + data['channelid']} target="_blank" title={data['channel_title']}>
+              <p>{data['channel_title']}</p></a>
+              <span> {data['view_count']+ " views  "}</span> <span>{data['published_at'].split("T")[0]}</span>
+            </div>)
+      })
+    }
 
     return (
       <div>
         <header className="site-header"><nav><b>カテゴリ:</b>{categoryCont}</nav></header><div className="header-emb"></div>
         <div className="left-panel">{leftPanelCont}</div>
-        <div className="main-category-panel"><h2>{this.state.curCategory}</h2>{channelPanel}</div>
+        <div className="main-category-panel">
+          <h2>{this.state.curCategory}</h2>{channelPanel}
+          <h3>新着動画</h3>{videoCont}
+        </div>
         <div className="controlPanel">
           <center>
             <button onClick={this.deleteChannel}>Delete</button>

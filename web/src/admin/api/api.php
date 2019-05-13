@@ -34,18 +34,16 @@
 			}
 			$stmt->execute();			
 		}
-	}
+		else{//fetch all data
+			$sql = "SELECT * FROM {$params['table']}";
+			$res = $pdo->query($sql);
+			$array[] = array();
 
-    else {
-    	/* return all data */
-		$sql = "SELECT * FROM channel";
-		$res = $pdo->query($sql);
-		$array[] = array();
+			foreach ($res as $data) {
+				$array[] = $data;
+			}
 
-		foreach ($res as $data) {
-			$array[] = $data;
+			echo json_encode($array);
 		}
-
-		echo json_encode($array);
 	}
 ?>

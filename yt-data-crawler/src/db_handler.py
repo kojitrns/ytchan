@@ -28,10 +28,13 @@ def video_record_gen(video_data, main_category, sub_category):
 	description = video_data['snippet']['description']
 	published_at = video_data['snippet']['publishedAt']
 	thumbnail = video_data['snippet']['thumbnails']['medium']['url']
-	view_count = video_data['statistics']['viewCount']
+	view_count = 0
 	like_count = 0
 	if 'likeCount' in video_data['statistics']:
 		like_count = video_data['statistics']['likeCount']
+	if 'viewCount' in video_data['statistics']:
+		view_count = video_data['statistics']['viewCount']
+
 	return (main_category, sub_category, channel_id, channel_title, video_id, video_title, view_count,
 		like_count, thumbnail, description, published_at)
 
