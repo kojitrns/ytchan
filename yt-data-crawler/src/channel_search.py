@@ -111,4 +111,4 @@ with open('category') as f:
 			recs = []
 			for chan in chan_list:
 				recs.append(db.chan_record_gen(chan, main_category ,category))
-			db.add_channels(recs, table_name)
+			db.add_data(recs, table_name)
