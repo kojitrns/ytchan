@@ -10,10 +10,10 @@ class Mgr extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {channelData: [], videoData: [], selectedChannelId: "none", curCategory: "ニュース",
+    this.state = {channelData: [], videoData: [], selectedChannelIds: [], curCategory: "ニュース",
       selectedCategory: "ニュース", selectedSubCategory: "地震"}
-    // this.updateChannelId = this.updateChannelId.bind(this)
     // this. = this..bind(this)
+    this.clearSelect = this.clearSelect.bind(this)
     this.onChangeCategorySelector = this.onChangeCategorySelector.bind(this)
     this.onChangeSubCategorySelector = this.onChangeSubCategorySelector.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
@@ -64,15 +64,18 @@ class Mgr extends React.Component {
       headers:{
         'Content-Type': 'application/json'
       }
-    }).then(res => console.log(res))
+    })
   }
 
   deleteChannel = () => {
-    const sendData = {
-        opType: 'delete',
-        channelid: this.state.selectedChannelId
-    }
-    this.callApi(sendData)
+    this.state.selectedChannelIds.forEach(channelId =>
+    {
+      const sendData = {
+          opType: 'delete',
+          channelid: channelId
+      }
+      this.callApi(sendData)
+    })
   }
 
   moveChannel = () => {
@@ -118,12 +121,15 @@ class Mgr extends React.Component {
     console.log("componentDidMount")
     this.fetchData("channelData")
     this.fetchData("videoData")
-    console.log(this.state)
   }
 
   selecteChannel(channelId){
-  	console.log("select_channelId", event)
-  	this.setState({selectedChannelId: channelId})
+    const curList = this.state.selectedChannelIds
+    this.setState({selectedChannelIds: curList.concat(channelId)})
+  }
+
+  clearSelect() {
+    this.setState({selectedChannelIds: []})
   }
 
   changeCategory = (category) => {
@@ -180,6 +186,11 @@ class Mgr extends React.Component {
       const channelTable = []
       channelTable.push(<h3 id={subcategory}>■{subcategory}</h3>)
       leftPanelCont.push(<p><a href={"#"+subcategory}>{subcategory}</a></p>)
+      subcategoryArray.sort(function(a,b){
+        if(a.viewcount<b.viewcount) return 1;
+        if(a.viewcount > b.viewcount) return -1;
+        return 0;
+      })
 
       subcategoryArray.forEach(data => {
         channelTable.push(
@@ -190,10 +201,14 @@ class Mgr extends React.Component {
                 <p>{data['viewcount']}</p><p>{data['videocount']}</p><p>{data['subscribercount']}</p>
               </div>
               <div className="detail-box">
-                <a href={"https://socialblade.com/youtube/channel/" + data['channelid']} target="_blank"> sbinfo</a>
+                <img id="desc-img" src="https://img.icons8.com/ios/50/000000/questions.png" />
+                <p>{data['description']}</p>
+                <a href={"https://socialblade.com/youtube/channel/" + data['channelid']} target="_blank" title="socialblade">
+                <img id="sb-img" src ="../img/sb.png"/>
+                </a>
               </div>
             </div>
-            <div className = {data['channelid']!=this.state.selectedChannelId ?"chan-title-box":"selected-title-box"}>
+            <div className = {this.state.selectedChannelIds.includes(data['channelid']) ? "selected-title-box":"chan-title-box"}>
               <a href={"https://www.youtube.com/channel/" + data['channelid']} target="_blank" title={data['channeltitle']}>{data['channeltitle']}</a>
             </div>
           </div>
@@ -210,7 +225,7 @@ class Mgr extends React.Component {
               <a href={"https://www.youtube.com/watch?v=" + data['video_id']} target="_blank">
               <img src = {data['thumbnail']} />
               <p>{data['video_title']}</p></a>
-              <a href={"https://www.youtube.com/channel/" + data['channelid']} target="_blank" title={data['channel_title']}>
+              <a href={"https://www.youtube.com/channel/" + data['channel_id']} target="_blank" title={data['channel_title']}>
               <p>{data['channel_title']}</p></a>
               <span> {data['view_count']+ " views  "}</span> <span>{data['published_at'].split("T")[0]}</span>
             </div>)
@@ -228,11 +243,12 @@ class Mgr extends React.Component {
         <div className="controlPanel">
           <center>
             <button onClick={this.deleteChannel}>Delete</button>
-            <button onClick={this.fetchData}>Update</button>
+            <button onClick={this.fetchData.bind(this,("channelData"))}>Update</button>
             <p><select name="mainCategory" value={this.state.selectedCategory} onChange={this.onChangeCategorySelector}>{categorySelectorCont}</select></p>
             <p><select name="subCategory" value={this.state.selectedSubCategory}
             onChange={this.onChangeSubCategorySelector}>{subCategorySelectorCont}</select></p>
             <button onClick={this.moveChannel}>Move</button>
+            <button onClick={this.clearSelect}>Clear</button>
             <p><input type="text" name="channelId" onKeyPress={this.handleKeyPress} /></p>
           </center>
         </div>

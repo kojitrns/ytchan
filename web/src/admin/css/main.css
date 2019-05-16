@@ -84,6 +84,17 @@ body{
 	float: left;
 }
 
+#sb-img {
+	 width: 20px;
+	 height: 25px;
+}
+
+#desc-img {
+	 width: 25px;
+	 height: 25px;
+	 margin-right: 4px;
+}
+
 .selected-chan-box img{
 	width: 40%;
 	height: 75%;
@@ -109,7 +120,7 @@ body{
 	margin: 10px;
 }
 
-.description p{
+.detail-box p{
 	width: 350px;
 	position: absolute;
 	border: 10px;
@@ -118,7 +129,7 @@ body{
 	background-color: #E6E8BA;
 }
 
-.description:hover p{
+.detail-box:hover p{
 	visibility: visible;
 }
 
@@ -157,7 +168,8 @@ body{
 }
 
 .video-box {
-	margin: 18px;
+	margin-left: 2rem;
+	margin-bottom: 4rem;
 	width: 28%;
 	height: 200px;
 	float: left;
