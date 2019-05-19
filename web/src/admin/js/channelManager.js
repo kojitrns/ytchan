@@ -187,7 +187,7 @@ class Mgr extends React.Component {
       channelTable.push(<h3 id={subcategory}>■{subcategory}</h3>)
       leftPanelCont.push(<p><a href={"#"+subcategory}>{subcategory}</a></p>)
       subcategoryArray.sort(function(a,b){
-        if(a.viewcount<b.viewcount) return 1;
+        if(a.viewcount < b.viewcount) return 1;
         if(a.viewcount > b.viewcount) return -1;
         return 0;
       })
@@ -219,7 +219,13 @@ class Mgr extends React.Component {
 
     const videoCont = []
     if(this.state.videoData[this.state.curCategory]){
-      this.state.videoData[this.state.curCategory].forEach(data => {
+      const videos = this.state.videoData[this.state.curCategory]
+      videos.sort(function(a,b){
+        if(a.published_at < b.published_at) return 1;
+        if(a.published_at > b.published_at) return -1;
+        return 0;
+      })
+      videos.forEach(data => {
           videoCont.push(
             <div className="video-box">
               <a href={"https://www.youtube.com/watch?v=" + data['video_id']} target="_blank">
