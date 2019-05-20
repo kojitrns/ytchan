@@ -14,15 +14,22 @@ def get_channel_data(channel_id):
 	    'id': channel_id}).json()['items'][0]
 
 def get_latest_video_data(uplist_id):
+	video_id = None
 	video_id = requests.get(
 	    reqPprefix+'playlistItems?', params={'key': api_key,
 	    'part': 'snippet',
-	    'playlistId': uplist_id}).json()
+	    'playlistId': uplist_id})
+	if video_id is None:
+		print("can't get playlistItem")
+		return
+
+	video_id = video_id.json()
 	if not 'items' in video_id:
 		print(uplist_id)
 		pprint.pprint(video_id)
 		return None
 	video_id = video_id['items'][0]['snippet']['resourceId']['videoId']
+
 	return requests.get(
 	    reqPprefix+'videos?', params={'key': api_key,
 	    'part': 'snippet,contentDetails,statistics',
