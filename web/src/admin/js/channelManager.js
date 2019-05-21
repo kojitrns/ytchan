@@ -11,12 +11,13 @@ class Mgr extends React.Component {
   constructor(props) {
     super(props)
     this.state = {channelData: [], videoData: [], selectedChannelIds: [], curCategory: "ニュース",
-      selectedCategory: "ニュース", selectedSubCategory: "地震"}
+      selectedCategory: "ニュース", selectedSubCategory: "地震", modeFlag: true}
     // this. = this..bind(this)
     this.clearSelect = this.clearSelect.bind(this)
     this.onChangeCategorySelector = this.onChangeCategorySelector.bind(this)
     this.onChangeSubCategorySelector = this.onChangeSubCategorySelector.bind(this)
     this.handleKeyPress = this.handleKeyPress.bind(this)
+    this.onChangeMode = this.onChangeMode.bind(this)
   }
 
   processData(allData) {
@@ -124,7 +125,6 @@ class Mgr extends React.Component {
   componentDidMount() {
     console.log("componentDidMount")
     this.fetchData("channelData")
-    this.fetchData("videoData")
   }
 
   selecteChannel(channelId){
@@ -158,8 +158,15 @@ class Mgr extends React.Component {
     this.setState({selectedSubCategory: event.target.value})
   }
 
+  onChangeMode(event) {
+    const currentModeFlag = this.state.modeFlag
+    this.setState({modeFlag: !currentModeFlag})
+    if(this.state.videoData.length === 0)
+      this.fetchData("videoData")
+  }
+
+
   render(){
-    console.log("render")
 
     const categoryCont = []
     const categorySelectorCont = []
@@ -242,13 +249,19 @@ class Mgr extends React.Component {
       })
     }
 
+    const displayCont = this.state.modeFlag ? channelPanel : <div><h3>新着動画</h3>{videoCont}</div>
+
     return (
       <div>
         <header className="site-header"><nav><b>カテゴリ:</b>{categoryCont}</nav></header><div className="header-emb"></div>
         <div className="left-panel">{leftPanelCont}</div>
         <div className="main-category-panel">
-          <h2>{this.state.curCategory}</h2>{channelPanel}
-          <h3>新着動画</h3>{videoCont}
+          <h2>{this.state.curCategory}</h2>
+          <input type="radio" value="channel" checked={this.state.modeFlag} onChange={this.onChangeMode}/>
+          <label>チャンネル</label>
+          <input type="radio" value="video"  checked={!this.state.modeFlag} onChange={this.onChangeMode}/>
+          <label>動画</label>
+          {displayCont}
         </div>
         <div className="controlPanel">
           <center>
