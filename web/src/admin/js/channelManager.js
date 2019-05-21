@@ -81,11 +81,15 @@ class Mgr extends React.Component {
   moveChannel = () => {
     const sendData = {
           opType: 'move',
-          channelid: this.state.selectedChannelId,
           maincategory: this.state.selectedCategory,
           subcategory: this.state.selectedSubCategory
     }
-    this.callApi(sendData)
+    this.state.selectedChannelIds.forEach(channelId =>
+    {
+      sendData.channelid = channelId
+      this.callApi(sendData)
+    })
+
   }
 
   addChannel = (channelId) => {
