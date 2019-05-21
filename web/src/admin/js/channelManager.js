@@ -77,6 +77,7 @@ class Mgr extends React.Component {
       }
       this.callApi(sendData)
     })
+    this.clearSelect()
   }
 
   moveChannel = () => {
@@ -90,7 +91,7 @@ class Mgr extends React.Component {
       sendData.channelid = channelId
       this.callApi(sendData)
     })
-
+    this.clearSelect()
   }
 
   addChannel = (channelId) => {
