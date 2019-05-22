@@ -25,8 +25,6 @@ def get_latest_video_data(uplist_id):
 
 	video_id = video_id.json()
 	if not 'items' in video_id:
-		print(uplist_id)
-		pprint.pprint(video_id)
 		return None
 	video_id = video_id['items'][0]['snippet']['resourceId']['videoId']
 
