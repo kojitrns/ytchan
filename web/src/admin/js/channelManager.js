@@ -22,26 +22,24 @@ class Mgr extends React.Component {
 
   processData(allData) {
     var res = []
-    allData.forEach(data =>{
-      if(data['maincategory']){
+
+    if(allData[0]['maincategory'])
+    allData.forEach(data => {
         if(res[data['maincategory']]==null)
           res[data['maincategory']]=[]
         if(res[data['maincategory']][data['subcategory']]==null)
           res[data['maincategory']][data['subcategory']]=[]
         res[data['maincategory']][data['subcategory']].push(data)
-      }
     })
-    allData.forEach(data =>{
-      if(data['main_category']){
+
+    if(allData[0]['main_category'])
+    allData.forEach(data => {
         if(res[data['main_category']]==null)
           res[data['main_category']]=[]
-        res[data['main_category']].push(data)
-        // if(res[data['main_category']][data['sub_category']]==null)
-        //   res[data['main_category']][data['sub_category']]=[]
-        // res[data['main_category']][data['sub_category']].push(data)
-      }
+        if(res[data['main_category']][data['sub_category']]==null)
+          res[data['main_category']][data['sub_category']]=[]
+        res[data['main_category']][data['sub_category']].push(data)
     })
-    console.log(res,allData)
     return res
   }
 
@@ -230,15 +228,22 @@ class Mgr extends React.Component {
     })
 
     const videoCont = []
-    if(this.state.videoData[this.state.curCategory]){
-      const videos = this.state.videoData[this.state.curCategory]
+    if(this.state.videoData[this.state.curCategory])
+    subcategoryList.forEach(subcategory => {
+      const subcategoryArray = this.state.channelData[this.state.curCategory][subcategory]
+      const videos = this.state.videoData[this.state.curCategory][subcategory]
+      if(videos === undefined) return
+      const videoSubCont = []
+      videoSubCont.push(<h3 id={subcategory}>■{subcategory}</h3>)
+      leftPanelCont.push(<p><a href={"#"+subcategory}>{subcategory}</a></p>)
+
       videos.sort(function(a,b){
         if(a.published_at < b.published_at) return 1;
         if(a.published_at > b.published_at) return -1;
         return 0;
       })
       videos.forEach(data => {
-          videoCont.push(
+          videoSubCont.push(
             <div className="video-box">
               <a href={"https://www.youtube.com/watch?v=" + data['video_id']} target="_blank">
               <img src = {data['thumbnail']} />
@@ -248,7 +253,8 @@ class Mgr extends React.Component {
               <span> {data['view_count']+ " views  "}</span> <span>{data['published_at'].split("T")[0]}</span>
             </div>)
       })
-    }
+      videoCont.push(<div className="clearfix">{videoSubCont}</div>)
+    })
 
     const displayCont = this.state.modeFlag ? channelPanel : <div><h3>新着動画</h3>{videoCont}</div>
 
