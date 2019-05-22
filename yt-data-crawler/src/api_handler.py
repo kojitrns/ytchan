@@ -1,5 +1,6 @@
 # coding: utf-8
 import sys
+import time
 import pprint
 import requests
 
@@ -14,24 +15,36 @@ def get_channel_data(channel_id):
 	    'id': channel_id}).json()['items'][0]
 
 def get_latest_video_data(uplist_id):
-	video_id = None
-	video_id = requests.get(
+	videos = None
+	videos = requests.get(
 	    reqPprefix+'playlistItems?', params={'key': api_key,
 	    'part': 'snippet',
 	    'playlistId': uplist_id})
-	if video_id is None:
-		print("can't get playlistItem")
-		return
+	videos = error_check(videos)
+	if  videos is None:
+		time.sleep(3)
+		return get_channel_data(channel_id)
 
-	video_id = video_id.json()
-	if not 'items' in video_id:
-		return None
-	video_id = video_id['items'][0]['snippet']['resourceId']['videoId']
-
-	return requests.get(
+	video_id = videos['snippet']['resourceId']['videoId']
+	video_data = requests.get(
 	    reqPprefix+'videos?', params={'key': api_key,
 	    'part': 'snippet,contentDetails,statistics',
-	    'id': video_id}).json()['items'][0]
+	    'id': video_id})
+	video_data = error_check(video_data)
+
+	if video_data is None:
+		time.sleep(3)
+		return get_channel_data(channel_id)
+
+	return video_data
+
+def error_check(ret):
+	if ret is None :
+		return None
+	ret = ret.json()
+	if 'items' in ret:
+		return ret['items'][0]
+	return None
 
 def get_category(category_id):
 	return requests.get(
