@@ -37,7 +37,7 @@
 		else{//fetch all data
 			$sql = "SELECT * FROM {$params['table']}";
 			$res = $pdo->query($sql);
-			$array[] = array();
+			$array = array();
 
 			foreach ($res as $data) {
 				$array[] = $data;
