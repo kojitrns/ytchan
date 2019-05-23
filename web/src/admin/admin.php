@@ -87,6 +87,7 @@ if ($_SESSION['auth'] !== true) {
   <head>
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"" charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <title>チャンネルずかん</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
     <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>

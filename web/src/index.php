@@ -2,6 +2,7 @@
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1" charset="UTF-8">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+    <title>チャンネルずかん</title>
 </head>
 <body>
 <?php
