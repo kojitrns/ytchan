@@ -191,6 +191,7 @@ class Mgr extends React.Component {
 
     const channelPanel = []
 
+    if(this.state.modeFlag)
     subcategoryList.forEach(subcategory => {
       const subcategoryArray = this.state.channelData[this.state.curCategory][subcategory]
       const channelTable = []
@@ -228,7 +229,7 @@ class Mgr extends React.Component {
     })
 
     const videoCont = []
-    if(this.state.videoData[this.state.curCategory])
+    if(!this.state.modeFlag && this.state.videoData[this.state.curCategory])
     subcategoryList.forEach(subcategory => {
       const subcategoryArray = this.state.channelData[this.state.curCategory][subcategory]
       const videos = this.state.videoData[this.state.curCategory][subcategory]
