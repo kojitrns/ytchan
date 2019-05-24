@@ -41,6 +41,11 @@ body{
 	margin: 5px;
 }
 
+.mode-selector {
+	float: right;
+	margin-right: 1rem;
+}
+
 .chan-container{
 	margin-top: 15px;
 	margin: 10px;
@@ -142,4 +147,31 @@ body{
     display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.video-box {
+	margin-left: 2rem;
+	margin-bottom: 4rem;
+	width: 28%;
+	height: 200px;
+	float: left;
+}
+
+.video-box p {
+	width: 98%;
+	margin: 0px;
+	display: -webkit-box;
+	max-height: 2.2rem;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+	-webkit-line-clamp: 2;
+	font-size: 1.0rem;
+	font-weight: 500;
+	line-height: 1.1rem;
+}
+
+.video-box img {
+	width: 100%;
 }

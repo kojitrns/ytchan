@@ -36,15 +36,34 @@ function get_channel_cont($chan_data=null)
 	return '<div class="chan-box">'. $cont .'</div>';
 }
 
-function set_channel_database(&$category_list)
+function get_video_cont($video_data=null)
+{
+	$pub_data = preg_split("/[T]/", $video_data['published_at'])[0];
+	$view_count = $video_data['view_count']+ " views  ";
+    return 
+    "<div class=\"video-box\">
+      <a href=\"https://www.youtube.com/watch?v={$video_data['video_id']}\" target=\"_blank\">
+      <img src = \"{$video_data['thumbnail']}\" />
+      <p>{$video_data['video_title']}</p></a>
+      <a href=\"https://www.youtube.com/channel/{$video_data['channel_id']}\" target=\"_blank\" title=\"{$video_data['channel_title']}\">
+      <p>{$video_data['channel_title']}</p></a>
+      <span> $view_count views</span> <span>$pub_data</span>
+    </div>";
+}
+
+function set_channel_database(&$category_list, $table_name)
 {
 	try {
-	    // $pdo = new PDO('pgsql:host=localhost; dbname=d34ajosp96vv38', 'koji', 'mukku');
 		$dbopts = parse_url(getenv('DATABASE_URL'));
 		$pdo = new PDO('pgsql:host='.$dbopts["host"].'; dbname='.ltrim($dbopts["path"],'/'), $dbopts["user"], $dbopts["pass"]);
 		//var_dump("connection succeeded\n");
-		foreach($pdo->query('SELECT * from channel') as $row) {
+		if($table_name=='channel')
+		foreach($pdo->query("SELECT * from $table_name") as $row) {
 			$category_list[$row['maincategory']][$row['subcategory']][] = $row;
+	    }
+	    else
+		foreach($pdo->query("SELECT * from $table_name") as $row) {
+			$category_list[$row['main_category']][$row['sub_category']][] = $row;
 	    }
 	} catch (PDOException $e) {
 		var_dump($e->getMessage());
@@ -53,8 +72,11 @@ function set_channel_database(&$category_list)
 
 function show_header(&$category_list) {
 	echo '<header class="site-header"><nav><b>カテゴリ:</b>';
+	$mode = '';
+	if(isset($_GET['mode']))
+		$mode = $_GET['mode'];
 	foreach ($category_list as $maincategory => $sub_categories) {
-		echo "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$maincategory\">$maincategory</a> ";
+		echo "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$maincategory&mode=$mode\">$maincategory</a> ";
 	}
 	echo '</nav></header><div class="header-emb"></div>';
 }
@@ -76,13 +98,15 @@ function sort_chan_rows(&$chan_rows, $sort_target) {
 	array_multisort($sort, SORT_DESC, $chan_rows);
 }
 
-// function init() {
-// }
-// $main_categories = file(__DIR__.'/main_category.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-
 $category_list = array();
 $cur_category = '';
-set_channel_database($category_list);
+
+if(!isset($_GET['mode']) || $_GET['mode']=='channel') {
+	set_channel_database($category_list, 'channel');
+} else {
+	set_channel_database($category_list, 'video');
+}
+
 show_header($category_list);
 
 if(isset($_GET['cur_category'])) {
@@ -94,9 +118,23 @@ if(isset($_GET['cur_category'])) {
 show_left_panel(array_keys($category_list[$cur_category]));
 
 echo "<div class=\"main-category-panel\"><h2>$cur_category</h2>";
+$chan_mode_checked = 'checked';
+$video_mode_checked = '';
+if(isset($_GET['mode']) && $_GET['mode'] == 'video') {
+	$chan_mode_checked = '';
+	$video_mode_checked = 'checked';
+}
+echo "<div class=\"mode-selector\">
+	  <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category\">
+	  <input type=\"radio\" value=\"channel\" $chan_mode_checked /><label>チャンネル</label></a>
+      <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=video\">
+      <input type=\"radio\" value=\"video\"  $video_mode_checked />
+      <label>最近の動画</label></a>
+      </div>";
 
 $sub_categories = $category_list[$cur_category];
 
+if(!isset($_GET['mode']) || $_GET=='channel')
 foreach ($sub_categories as $subcategory => $rows) {
 	echo "<div class=\"chan-container clearfix\"><h3 id=\"$subcategory\">■$subcategory</h3>";
 	sort_chan_rows($rows, 'viewcount');
@@ -105,6 +143,17 @@ foreach ($sub_categories as $subcategory => $rows) {
 	}
 	echo '</div>';
 }
+else {
+	foreach ($sub_categories as $subcategory => $rows) {
+	echo "<div class=\"clearfix\"><h3 id=\"$subcategory\">■$subcategory</h3>";
+	foreach ($rows as $row) {
+		echo get_video_cont($row);
+	}
+	echo '</div>';
+}
+
+}
+
 echo '</div>';
 ?>
 </body></html>
