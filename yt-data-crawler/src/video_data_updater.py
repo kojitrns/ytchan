@@ -16,7 +16,10 @@ def init():
 
 def update_video_data(conn, cur, channel_id, uplist_id, main_category, sub_category):
 	db.delete_video(channel_id, cur)
-	video_data = ytapi.get_latest_video_data(uplist_id)
+	video_data = ytapi.get_latest_video_data(uplist_id, 2)
+	if video_data is None:
+		print("Cound not get video data")
+		return
 
 	if check_pubulish_date(video_data['snippet']['publishedAt'], 1):
 		print("get new video")

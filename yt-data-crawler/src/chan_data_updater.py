@@ -15,7 +15,11 @@ def init():
 
 def update_channel_data(conn, cur, channel_id, main_category, sub_category):
 	db.delete_channel(channel_id, cur)
-	chan_data = ytapi.get_channel_data(channel_id)
+	chan_data = ytapi.get_channel_data(channel_id, 3)
+	if chan_data is None:
+		print("Cound not get chan data")
+		return
+
 	row = [db.chan_record_gen(chan_data, main_category, sub_category)]
 	db.add_data_with_conn(row, 'channel', conn, cur)
 
