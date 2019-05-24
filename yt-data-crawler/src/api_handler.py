@@ -31,7 +31,7 @@ def get_latest_video_data(uplist_id):
 	if  videos is None:
 		print("retry! \n\n\n\n")
 		time.sleep(3)
-		return get_channel_data(channel_id)
+		return get_latest_video_data(uplist_id)
 
 	video_id = videos['snippet']['resourceId']['videoId']
 	video_data = requests.get(
@@ -43,7 +43,7 @@ def get_latest_video_data(uplist_id):
 	if video_data is None:
 		print("retry! \n\n\n\n")
 		time.sleep(3)
-		return get_channel_data(channel_id)
+		return get_latest_video_data(uplist_id)
 
 	return video_data
 
