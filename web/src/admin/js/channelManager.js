@@ -275,8 +275,8 @@ class Mgr extends React.Component {
           <center>
             <button onClick={this.deleteChannel}>Delete</button>
             <button onClick={this.fetchData.bind(this,("channelData"))}>Update</button>
-            <p><select name="mainCategory" value={this.state.selectedCategory} onChange={this.onChangeCategorySelector}>{categorySelectorCont}</select></p>
-            <p><select name="subCategory" value={this.state.selectedSubCategory}
+            <p><select size="10" name="mainCategory" value={this.state.selectedCategory} onChange={this.onChangeCategorySelector}>{categorySelectorCont}</select></p>
+            <p><select size="10" name="subCategory" value={this.state.selectedSubCategory}
             onChange={this.onChangeSubCategorySelector}>{subCategorySelectorCont}</select></p>
             <button onClick={this.moveChannel}>Move</button>
             <button onClick={this.clearSelect}>Clear</button>
