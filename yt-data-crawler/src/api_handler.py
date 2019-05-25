@@ -58,7 +58,7 @@ def error_check(ret):
 		pprint.pprint(ret)
 		return None
 	ret = ret.json()
-	if 'items' in ret:
+	if 'items' in ret and len(ret['items']) > 0:
 		return ret['items'][0]
 	pprint.pprint(ret)
 	return None
