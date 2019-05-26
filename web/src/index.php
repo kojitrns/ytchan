@@ -125,7 +125,7 @@ if(isset($_GET['mode']) && $_GET['mode'] == 'video') {
 	$video_mode_checked = 'checked';
 }
 echo "<div class=\"mode-selector\">
-	  <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category\">
+	  <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=channel\">
 	  <input type=\"radio\" value=\"channel\" $chan_mode_checked /><label>チャンネル</label></a>
       <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=video\">
       <input type=\"radio\" value=\"video\"  $video_mode_checked />
@@ -134,7 +134,7 @@ echo "<div class=\"mode-selector\">
 
 $sub_categories = $category_list[$cur_category];
 
-if(!isset($_GET['mode']) || $_GET=='channel')
+if(!isset($_GET['mode']) || $_GET['mode']=='channel')
 foreach ($sub_categories as $subcategory => $rows) {
 	echo "<div class=\"chan-container clearfix\"><h3 id=\"$subcategory\">■$subcategory</h3>";
 	sort_chan_rows($rows, 'viewcount');
