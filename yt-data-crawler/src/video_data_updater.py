@@ -1,5 +1,6 @@
 # coding: utf-8
 import pprint
+import sys
 import time
 import datetime
 import db_handler as db
@@ -39,10 +40,22 @@ init()
 
 with db.get_connection() as conn:
 	with conn.cursor() as cur:
+		if len(sys.argv) > 1:
+			print(sys.argv)
+			cur.execute('SELECT * FROM channel WHERE channelid = %s', (sys.argv[1],))
+			row = cur.fetchone()
+			if is_valid_channel(row):
+				print(row[DATA_ROW_MAPPING['title']])
+				print(row[DATA_ROW_MAPPING['uploads_id']])
+				update_video_data(conn, cur, row[DATA_ROW_MAPPING['channel_id']], row[DATA_ROW_MAPPING['uploads_id']],
+					row[DATA_ROW_MAPPING['main_category']], row[DATA_ROW_MAPPING['sub_category']])
+			exit()
+
 		cur.execute('SELECT * FROM channel')
 		rows = cur.fetchall()
 		for (id, row) in enumerate(rows):
 			if is_valid_channel(row):
 				print(row[DATA_ROW_MAPPING['title']])
+				print(row[DATA_ROW_MAPPING['uploads_id']])
 				update_video_data(conn, cur, row[DATA_ROW_MAPPING['channel_id']], row[DATA_ROW_MAPPING['uploads_id']],
 					row[DATA_ROW_MAPPING['main_category']], row[DATA_ROW_MAPPING['sub_category']])
