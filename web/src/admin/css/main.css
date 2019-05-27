@@ -175,7 +175,6 @@ body{
 
 .video-box p {
 	width: 98%;
-	margin: 0px;
 	display: -webkit-box;
 	max-height: 2.2rem;
 	-webkit-box-orient: vertical;
@@ -186,6 +185,7 @@ body{
 	font-size: 1.0rem;
 	font-weight: 500;
 	line-height: 1.1rem;
+	margin-top: 2px;
 }
 
 .video-box img {
@@ -196,12 +196,17 @@ body{
 	width: 14%;
 	background-color: #DCDCDC;
 	left: 86%;
+	top: 0px;
 	position: fixed;
 }
 
 .controlPanel input {
-	width: 90%;
-	margin: 4%;
+	width: 50%;
+	margin: 2%;
+}
+
+.inputs p {
+	margin: 0px;
 }
 
 button {
@@ -215,4 +220,10 @@ select {
 
 .nav-link {
 	padding: 0.1rem 0.5rem;
+}
+
+.mode-selector {
+	float: right;
+	margin-right: 1rem;
+	margin: 0.8rem;
 }

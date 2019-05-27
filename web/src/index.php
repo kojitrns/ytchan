@@ -118,19 +118,15 @@ if(isset($_GET['cur_category'])) {
 show_left_panel(array_keys($category_list[$cur_category]));
 
 echo "<div class=\"main-category-panel\"><h2>$cur_category</h2>";
-$chan_mode_checked = 'checked';
-$video_mode_checked = '';
+$mode_cont = '';
 if(isset($_GET['mode']) && $_GET['mode'] == 'video') {
-	$chan_mode_checked = '';
-	$video_mode_checked = 'checked';
+	$mode_cont = "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=channel\">
+	  チャンネル</a> / 最近の動画";
+} else {
+	$mode_cont = " チャンネル / <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=video\">
+      最近の動画</a>";
 }
-echo "<div class=\"mode-selector\">
-	  <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=channel\">
-	  <input type=\"radio\" value=\"channel\" $chan_mode_checked /><label>チャンネル</label></a>
-      <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=video\">
-      <input type=\"radio\" value=\"video\"  $video_mode_checked />
-      <label>最近の動画</label></a>
-      </div>";
+echo "<div class=\"mode-selector\">$mode_cont</div>";
 
 $sub_categories = $category_list[$cur_category];
 
