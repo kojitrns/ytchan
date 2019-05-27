@@ -11,7 +11,8 @@ class Mgr extends React.Component {
   constructor(props) {
     super(props)
     this.state = {channelData: [], videoData: [], selectedChannelIds: [], curCategory: "ニュース",
-      selectedCategory: "ニュース", selectedSubCategory: "地震", modeFlag: true}
+      selectedCategory: "ニュース", selectedSubCategory: "地震", modeFlag: true, categoryInputMode: true,
+      mainCategoryInputs: [], subCategoryInputs: []}
     // this. = this..bind(this)
     this.clearSelect = this.clearSelect.bind(this)
     this.onChangeCategorySelector = this.onChangeCategorySelector.bind(this)
@@ -136,14 +137,25 @@ class Mgr extends React.Component {
   }
 
   changeCategory = (category) => {
-    console.log("changeCategory", this)
     this.setState({curCategory: category})
   }
 
   handleKeyPress(event) {
     if(event.key == 'Enter') {
-      console.log("enter",event.target.value)
-      this.addChannel(event.target.value)
+      console.log("enter",event.target.value,event.target.name)
+      switch(event.target.name) {
+        case "channelId":
+          this.addChannel(event.target.value)
+          break
+        case "category":
+          const curMainList = this.state.mainCategoryInputs
+          this.setState({mainCategoryInputs: curMainList.concat(event.target.value)})
+          break
+        case "subCategory":
+          const curSubList = this.state.subCategoryInputs
+          this.setState({subCategoryInputs: curSubList.concat(event.target.value)})
+          break
+      }
     }
   }
 
@@ -164,7 +176,6 @@ class Mgr extends React.Component {
       this.fetchData("videoData")
   }
 
-
   render(){
 
     const categoryCont = []
@@ -176,13 +187,19 @@ class Mgr extends React.Component {
       categoryCont.push(<span onClick={this.changeCategory.bind(this, category)}>{category} </span>)
       categorySelectorCont.push(<option value={category} >{category}</option>)
     })
+    this.state.mainCategoryInputs.forEach(category => {
+      categorySelectorCont.push(<option value={category}>{category}</option>)
+    })
 
     if(this.state.channelData[this.state.selectedCategory]){
       subcategoryList = Object.keys(this.state.channelData[this.state.selectedCategory])
       subcategoryList.forEach(subcategory => {
-        subCategorySelectorCont.push(<option value={subcategory} >{subcategory}</option>)        
+        subCategorySelectorCont.push(<option value={subcategory}>{subcategory}</option>)
       })
     }
+    this.state.subCategoryInputs.forEach(subcategory => {
+      subCategorySelectorCont.push(<option value={subcategory} >{subcategory}</option>)
+    })
 
     var subcategoryList = []
     if(this.state.channelData[this.state.curCategory]){
@@ -279,7 +296,11 @@ class Mgr extends React.Component {
             onChange={this.onChangeSubCategorySelector}>{subCategorySelectorCont}</select></p>
             <button onClick={this.moveChannel}>Move</button>
             <button onClick={this.clearSelect}>Clear</button>
-            <p><input type="text" name="channelId" onKeyPress={this.handleKeyPress} /></p>
+            <div className="inputs">
+              <p ><label>main:</label><input type="text" name="category" onKeyPress={this.handleKeyPress} /></p>
+              <p><label>sub:</label><input type="text" name="subCategory" onKeyPress={this.handleKeyPress} /></p>
+              <p><label>id:</label><input type="text" name="channelId" onKeyPress={this.handleKeyPress} /></p>
+            </div>
           </center>
         </div>
       </div>
