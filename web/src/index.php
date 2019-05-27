@@ -25,13 +25,13 @@ function get_channel_cont($chan_data=null)
 		$description = "<span class=\"description\"><img id=\"desc-img\" src=\"https://img.icons8.com/ios/50/000000/questions.png\" /> <p>{$chan_data['description']}</p></span>";
 	}
 	$social_blade = "<a href=\"https://socialblade.com/youtube/channel/{$chan_data['channelid']}\" target=_blank> <img id=\"sb-img\" src =\"img/sb.png\"/></a>";
-	$viewcount = digit_handler($chan_data['viewcount']);
-	$videocount = digit_handler($chan_data['videocount']);
-	$subscribercount = digit_handler($chan_data['subscribercount']);
+	$view_count = digit_handler($chan_data['viewcount']);
+	$video_count = digit_handler($chan_data['videocount']);
+	$subscriber_count = digit_handler($chan_data['subscribercount']);
 
 	$chan_detail = "<div class=\"detail-box\">$description$social_blade</div>";
 
-	$chan_info = "<div class=\"counter-box\"><p>$viewcount</p><p>$subscribercount</p><p>$subscribercount</p></div>$chan_detail";
+	$chan_info = "<div class=\"counter-box\"><p>$view_count</p><p>$video_count</p><p>$subscriber_count</p></div>$chan_detail";
 	$cont = sprintf('<img src="%s"><div class="chan-info-box">%s</div><div class ="chan-title-box"><a href="%s%s" target=_blank title="%s">%s</a></div>', $chan_data['thumbnailurl'], $chan_info, $youtube_url, $chan_data['channelid'], $chan_data['channeltitle'] ,$chan_data['channeltitle']);
 	return '<div class="chan-box">'. $cont .'</div>';
 }
