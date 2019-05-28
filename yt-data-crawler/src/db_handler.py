@@ -12,7 +12,13 @@ def get_connection():
 def chan_record_gen(chan_data, main_category, sub_category):
 	stat = chan_data['statistics']
 	description = chan_data['snippet']['description']
-	publish_data = chan_data['snippet']['publishedAt']
+
+	try:
+		publish_data = chan_data['snippet']['publishedAt']
+	except KeyError:
+		print("can't get publishedAt")
+		pprint.pprint(chan_data)
+		publish_data = ''
 	keywords = ''
 	if 'keywords' in chan_data['brandingSettings']['channel']:
 		keywords = chan_data['brandingSettings']['channel']['keywords']
