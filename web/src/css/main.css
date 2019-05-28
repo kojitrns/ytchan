@@ -2,14 +2,14 @@
 /* CSS Document */
 
 body{
-	background-color: #EBEBEB;
+	background-color: #FFFFFF;
 	margin: 0px;
 }
 
 .site-header {
 	width: 80%;
 	margin-left: 7%;
-	background-color: #EBEBEBD1;
+	background-color: #FFFFFFD1;
 	position: fixed;
 }
 
@@ -64,8 +64,7 @@ body{
 	min-width: 200px;
 	height: 180px;
     margin: 7px 7px;
-	background-color: #CAD4CF;
-    border: solid 2px #5d627b;
+    border: solid 2px #FFFFFF;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
     float: left;
 }
@@ -90,7 +89,7 @@ body{
 .chan-info-box {
 	width: 60%;
 	height: 75%;
-	background-color: #CAD4CF;
+	background-color: #e6eae8;
 	float: right;
 }
 
@@ -134,7 +133,7 @@ body{
 
 .chan-title-box {
 	height: 25%;
-	background-color:#BEC1D8;
+	background-color:#E2E2E2;
     clear: both;
     display: flex;
 	align-items: center;
