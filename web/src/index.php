@@ -71,7 +71,7 @@ function set_channel_database(&$category_list, $table_name)
 }
 
 function show_header(&$category_list) {
-	echo '<header class="site-header"><nav><b>カテゴリ:</b>';
+	echo '<header class="site-header"><nav><b>カテゴリ: </b>';
 	$mode = '';
 	if(isset($_GET['mode']))
 		$mode = $_GET['mode'];

@@ -1,8 +1,9 @@
 // const channelDataCont = ['maincategory','subcategory','channelid','title','viewcount','videocount','subscribercount',
 // 'thumbnail_url','description','keywords','uploads_id', 'publishe_date']
 
+
 const myappAddr = "api/api.php"
-const ytAddr = "https://www.googleapis.com/youtube/v3/channels?"
+const ytAddr = "https://www.googleapis.com/youtube/v3/"
 const apiKey = "AIzaSyD3R2gavNlItHEZWTt-_UOMEwFwMN5reiQ"
 const tableMap = {channelData: "channel", videoData: "video"}
 
@@ -11,8 +12,8 @@ class Mgr extends React.Component {
   constructor(props) {
     super(props)
     this.state = {channelData: [], videoData: [], selectedChannelIds: [], curCategory: "ニュース",
-      selectedCategory: "ニュース", selectedSubCategory: "地震", modeFlag: true, categoryInputMode: true,
-      mainCategoryInputs: [], subCategoryInputs: []}
+      selectedCategory: "ニュース", selectedSubCategory: "地震", visibleCont: "channels", categoryInputMode: true,
+      mainCategoryInputs: [], subCategoryInputs: [], searchResult: []}
     // this. = this..bind(this)
     this.clearSelect = this.clearSelect.bind(this)
     this.onChangeCategorySelector = this.onChangeCategorySelector.bind(this)
@@ -23,24 +24,25 @@ class Mgr extends React.Component {
 
   processData(allData) {
     var res = []
+    if(allData[0]['maincategory']) {
+      allData.forEach(data => {
+          if(res[data['maincategory']] === undefined)
+            res[data['maincategory']] = []
+          if(res[data['maincategory']][data['subcategory']] === undefined)
+            res[data['maincategory']][data['subcategory']] = []
+          res[data['maincategory']][data['subcategory']].push(data)
+      })
+    }
 
-    if(allData[0]['maincategory'])
-    allData.forEach(data => {
-        if(res[data['maincategory']]==null)
-          res[data['maincategory']]=[]
-        if(res[data['maincategory']][data['subcategory']]==null)
-          res[data['maincategory']][data['subcategory']]=[]
-        res[data['maincategory']][data['subcategory']].push(data)
-    })
-
-    if(allData[0]['main_category'])
-    allData.forEach(data => {
-        if(res[data['main_category']]==null)
-          res[data['main_category']]=[]
-        if(res[data['main_category']][data['sub_category']]==null)
-          res[data['main_category']][data['sub_category']]=[]
-        res[data['main_category']][data['sub_category']].push(data)
-    })
+    if(allData[0]['main_category']) {
+      allData.forEach(data => {
+          if(res[data['main_category']] === undefined)
+            res[data['main_category']] = []
+          if(res[data['main_category']][data['sub_category']] === undefined)
+            res[data['main_category']][data['sub_category']] = []
+          res[data['main_category']][data['sub_category']].push(data)
+      })
+    }
     return res
   }
 
@@ -94,33 +96,56 @@ class Mgr extends React.Component {
   }
 
   addChannel = (channelId) => {
-    const params = new URLSearchParams();
     const sendData = {
           opType: 'add',
           maincategory: this.state.selectedCategory,
           subcategory: this.state.selectedSubCategory,
           channelid: channelId,
-    }    
+    }
+    const clb = (chanData) => {
+      sendData.title = chanData.snippet.title
+      sendData.viewcount = chanData.statistics.viewCount
+      sendData.videocount = chanData.statistics.videoCount
+      sendData.subscribercount = chanData.statistics.subscriberCount
+      sendData.thumbnail_url = chanData.snippet.thumbnails.default.url
+      sendData.description = chanData.snippet.description
+      sendData.keywords = chanData.brandingSettings.channel.keywords
+      sendData.uploads_id = chanData.contentDetails.relatedPlaylists.uploads
+      sendData.publish_date = chanData.snippet.publishedAt
+      this.callApi(sendData)
+    }
+    this.getChannelData(channelId, clb)
+  }
 
+  getChannelData = (channelId, clb) => {
+    const params = new URLSearchParams();
     params.set('key', apiKey)
     params.set('part',  'statistics,snippet,brandingSettings,contentDetails')
     params.set('id', channelId)
-    fetch(ytAddr+params.toString()).then(res => res.json()).then(json => {
-        var chanData = json.items[0]
-        sendData.title = chanData.snippet.title
-        sendData.viewcount = chanData.statistics.viewCount
-        sendData.videocount = chanData.statistics.videoCount
-        sendData.subscribercount = chanData.statistics.subscriberCount
-        sendData.thumbnail_url = chanData.snippet.thumbnails.default.url
-        sendData.description = chanData.snippet.description
-        sendData.keywords = chanData.brandingSettings.channel.keywords
-        sendData.uploads_id = chanData.contentDetails.relatedPlaylists.uploads
-        sendData.publish_date = chanData.snippet.publishedAt
-        // console.log(json,sendData)
-        this.callApi(sendData)
-      }
-    )
-  }  
+    fetch(ytAddr + 'channels?' + params.toString()).then(res => res.json()).then(json => {
+      clb(json.items[0])
+    })
+  }
+
+  searchChannel = (word) => {
+    const params = new URLSearchParams();
+    params.set('key', apiKey)
+    params.set('part', 'snippet')
+    params.set('maxResults', 50)
+    params.set('type', 'channel')
+    params.set('q',  word)
+    const curChannelResult = []
+    const clb = (chanData) => {
+      curChannelResult.push(chanData)
+      this.setState({searchResult: curChannelResult})
+    }
+    fetch(ytAddr + 'search?' + params.toString()).then(res => res.json()).then(json => {
+        json.items.forEach(channel => {
+          console.log("searchChannel", channel.snippet.title)
+          this.getChannelData(channel.snippet.channelId, clb)
+        })
+    })
+  }
 
   componentDidMount() {
     console.log("componentDidMount")
@@ -129,6 +154,10 @@ class Mgr extends React.Component {
 
   selecteChannel(channelId){
     const curList = this.state.selectedChannelIds
+    if(curList.includes(channelId)) {
+      this.setState({selectedChannelIds: curList.filter(id => id!==channelId)})
+      return
+    }
     this.setState({selectedChannelIds: curList.concat(channelId)})
   }
 
@@ -155,6 +184,10 @@ class Mgr extends React.Component {
           const curSubList = this.state.subCategoryInputs
           this.setState({subCategoryInputs: curSubList.concat(event.target.value)})
           break
+        case "search":
+          this.searchChannel(event.target.value)
+          this.setState({visibleCont: "searchResult" })
+          break
       }
     }
   }
@@ -169,11 +202,52 @@ class Mgr extends React.Component {
     this.setState({selectedSubCategory: event.target.value})
   }
 
-  onChangeMode(event) {
-    const currentModeFlag = this.state.modeFlag
-    this.setState({modeFlag: !currentModeFlag})
+  onChangeMode() {
+    const currentCont = this.state.visibleCont
+    let nextCont = null
+    switch(currentCont) {
+      case "channels":
+        nextCont = "videos"
+        break
+      case "videos":
+        nextCont = "channels"
+        break
+      default :
+        nextCont = "channels"
+    }
+    this.setState({visibleCont: nextCont})
+
     if(this.state.videoData.length === 0)
       this.fetchData("videoData")
+  }
+
+  getSearchCont() {
+    const searchCont = []
+    this.state.searchResult.forEach(channel => {
+      searchCont.push(
+          <div className="chan-box">
+            <img src = {channel.snippet.thumbnails.medium.url} />
+            <div className="chan-info-box" onClick={this.selecteChannel.bind(this, channel.id)}>
+              <div className="counter-box">
+                <p>{channel.statistics.viewCount}</p>
+                <p>{channel.statistics.videoCount}</p>
+                <p>{channel.statistics.subscriberCount}</p>
+              </div>
+              <div className="detail-box">
+                <img id="desc-img" src="https://img.icons8.com/ios/50/000000/questions.png" />
+                <p>{channel.snippet.description}</p>
+                <a href={"https://socialblade.com/youtube/channel/" + channel.id} target="_blank" title="socialblade">
+                <img id="sb-img" src ="../img/sb.png"/>
+                </a>
+              </div>
+            </div>
+            <div className = {this.state.selectedChannelIds.includes(channel.id) ? "selected-title-box":"chan-title-box"}>
+              <a href={"https://www.youtube.com/channel/" + channel.id} target="_blank" title={channel.snippet.title}>{channel.snippet.title}</a>
+            </div>
+          </div>
+      )
+    })
+    return searchCont
   }
 
   render(){
@@ -182,6 +256,7 @@ class Mgr extends React.Component {
     const categorySelectorCont = []
     const subCategorySelectorCont = []
     const leftPanelCont = []
+    const mainCont = [<h2>{this.state.curCategory}</h2>]
 
     Object.keys(this.state.channelData).forEach(category => {
       categoryCont.push(<span onClick={this.changeCategory.bind(this, category)}>{category} </span>)
@@ -206,83 +281,88 @@ class Mgr extends React.Component {
       subcategoryList = Object.keys(this.state.channelData[this.state.curCategory])
     }
 
-    const channelPanel = []
 
-    if(this.state.modeFlag)
-    subcategoryList.forEach(subcategory => {
-      const subcategoryArray = this.state.channelData[this.state.curCategory][subcategory]
-      const channelTable = []
-      channelTable.push(<h3 id={subcategory}>■{subcategory}</h3>)
-      leftPanelCont.push(<p><a href={"#"+subcategory}>{subcategory}</a></p>)
-      subcategoryArray.sort(function(a,b){
-        if(a.viewcount < b.viewcount) return 1;
-        if(a.viewcount > b.viewcount) return -1;
-        return 0;
-      })
+    if(this.state.visibleCont === "channels") {
+      const channelPanel = []
+      subcategoryList.forEach(subcategory => {
+        const subcategoryArray = this.state.channelData[this.state.curCategory][subcategory]
+        const channelTable = []
+        channelTable.push(<h3 id={subcategory}>■{subcategory}</h3>)
+        leftPanelCont.push(<p><a href={"#"+subcategory}>{subcategory}</a></p>)
+        subcategoryArray.sort(function(a,b){
+          if(a.viewcount < b.viewcount) return 1;
+          if(a.viewcount > b.viewcount) return -1;
+          return 0;
+        })
 
-      subcategoryArray.forEach(data => {
-        channelTable.push(
-          <div className="chan-box" onClick={this.selecteChannel.bind(this, data['channelid'])}>
-            <img src = {data['thumbnailurl']} />
-            <div className="chan-info-box">
-              <div className="counter-box">
-                <p>{data['viewcount']}</p><p>{data['videocount']}</p><p>{data['subscribercount']}</p>
+        subcategoryArray.forEach(data => {
+          channelTable.push(
+            <div className="chan-box">
+              <img src = {data['thumbnailurl']} />
+              <div className="chan-info-box" onClick={this.selecteChannel.bind(this, data['channelid'])}>
+                <div className="counter-box">
+                  <p>{data['viewcount']}</p><p>{data['videocount']}</p><p>{data['subscribercount']}</p>
+                </div>
+                <div className="detail-box">
+                  <img id="desc-img" src="https://img.icons8.com/ios/50/000000/questions.png" />
+                  <p>{data['description']}</p>
+                  <a href={"https://socialblade.com/youtube/channel/" + data['channelid']} target="_blank" title="socialblade">
+                  <img id="sb-img" src ="../img/sb.png"/>
+                  </a>
+                </div>
               </div>
-              <div className="detail-box">
-                <img id="desc-img" src="https://img.icons8.com/ios/50/000000/questions.png" />
-                <p>{data['description']}</p>
-                <a href={"https://socialblade.com/youtube/channel/" + data['channelid']} target="_blank" title="socialblade">
-                <img id="sb-img" src ="../img/sb.png"/>
-                </a>
+              <div className = {this.state.selectedChannelIds.includes(data['channelid']) ? "selected-title-box":"chan-title-box"}>
+                <a href={"https://www.youtube.com/channel/" + data['channelid']} target="_blank" title={data['channeltitle']}>{data['channeltitle']}</a>
               </div>
             </div>
-            <div className = {this.state.selectedChannelIds.includes(data['channelid']) ? "selected-title-box":"chan-title-box"}>
-              <a href={"https://www.youtube.com/channel/" + data['channelid']} target="_blank" title={data['channeltitle']}>{data['channeltitle']}</a>
-            </div>
-          </div>
-        )}
-      )
-      channelPanel.push(<div className="chan-container clearfix">{channelTable}</div>)
-    })
-
-    const videoCont = []
-    if(!this.state.modeFlag && this.state.videoData[this.state.curCategory])
-    subcategoryList.forEach(subcategory => {
-      const subcategoryArray = this.state.channelData[this.state.curCategory][subcategory]
-      const videos = this.state.videoData[this.state.curCategory][subcategory]
-      if(videos === undefined) return
-      const videoSubCont = []
-      videoSubCont.push(<h3 id={subcategory}>■{subcategory}</h3>)
-      leftPanelCont.push(<p><a href={"#"+subcategory}>{subcategory}</a></p>)
-
-      videos.sort(function(a,b){
-        if(a.published_at < b.published_at) return 1;
-        if(a.published_at > b.published_at) return -1;
-        return 0;
+          )}
+        )
+        channelPanel.push(<div className="chan-container clearfix">{channelTable}</div>)
       })
-      videos.forEach(data => {
-          videoSubCont.push(
-            <div className="video-box">
-              <a href={"https://www.youtube.com/watch?v=" + data['video_id']} target="_blank">
-              <img src = {data['thumbnail']} />
-              <p>{data['video_title']}</p></a>
-              <a href={"https://www.youtube.com/channel/" + data['channel_id']} target="_blank" title={data['channel_title']}>
-              <p>{data['channel_title']}</p></a>
-              <span> {data['view_count']+ " views  "}</span> <span>{data['published_at'].split("T")[0]}</span>
-            </div>)
-      })
-      videoCont.push(<div className="clearfix">{videoSubCont}</div>)
-    })
+      mainCont.push(channelPanel)
+    }
+    else if(this.state.visibleCont === "videos"){
+      const videoCont = []
+      if(this.state.videoData[this.state.curCategory])
+      subcategoryList.forEach(subcategory => {
+        const videos = this.state.videoData[this.state.curCategory][subcategory]
+        if(videos === undefined) return
+        const videoSubCont = []
+        videoSubCont.push(<h3 id={subcategory}>■{subcategory}</h3>)
+        leftPanelCont.push(<p><a href={"#"+subcategory}>{subcategory}</a></p>)
 
-    const displayCont = this.state.modeFlag ? channelPanel : <div><h3>新着動画</h3>{videoCont}</div>
+        videos.sort(function(a,b){
+          if(a.published_at < b.published_at) return 1;
+          if(a.published_at > b.published_at) return -1;
+          return 0;
+        })
+        videos.forEach(data => {
+            videoSubCont.push(
+              <div className="video-box">
+                <a href={"https://www.youtube.com/watch?v=" + data['video_id']} target="_blank">
+                <img src = {data['thumbnail']} />
+                <p>{data['video_title']}</p></a>
+                <a href={"https://www.youtube.com/channel/" + data['channel_id']} target="_blank" title={data['channel_title']}>
+                <p>{data['channel_title']}</p></a>
+                <span> {data['view_count']+ " views  "}</span> <span>{data['published_at'].split("T")[0]}</span>
+              </div>)
+        })
+        videoCont.push(<div className="clearfix">{videoSubCont}</div>)
+      })
+      mainCont.push(<div><h3>新着動画</h3>{videoCont}</div>)
+    }
+    else {
+      mainCont.push(this.getSearchCont())
+    }
 
     return (
       <div>
-        <header className="site-header"><nav><b>カテゴリ:</b>{categoryCont}</nav></header><div className="header-emb"></div>
+        <header className="site-header"><nav><b>カテゴリ:</b>{categoryCont}</nav></header>
+        <div className="header-emb"></div>
         <div className="left-panel">{leftPanelCont}</div>
         <div className="main-category-panel">
-          <h2>{this.state.curCategory}</h2>
-          {displayCont}
+          <p><label>検索:</label><input type="text" name="search" onKeyPress={this.handleKeyPress} /></p>
+          {mainCont}
         </div>
         <div className="controlPanel">
           <center>
@@ -297,7 +377,7 @@ class Mgr extends React.Component {
             <button onClick={this.moveChannel}>Move</button>
             <button onClick={this.clearSelect}>Clear</button>
             <div className="inputs">
-              <p ><label>main:</label><input type="text" name="category" onKeyPress={this.handleKeyPress} /></p>
+              <p><label>main:</label><input type="text" name="category" onKeyPress={this.handleKeyPress} /></p>
               <p><label>sub:</label><input type="text" name="subCategory" onKeyPress={this.handleKeyPress} /></p>
               <p><label>id:</label><input type="text" name="channelId" onKeyPress={this.handleKeyPress} /></p>
             </div>
@@ -306,7 +386,6 @@ class Mgr extends React.Component {
       </div>
     );
   }
-
 };
 
 ReactDOM.render(

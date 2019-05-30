@@ -64,8 +64,9 @@ body{
 	min-width: 200px;
 	height: 180px;
     margin: 7px 7px;
-    border: solid 2px #FFFFFF;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+    /*border: solid 2px #FFFFFF;*/
+    border: solid 1px #000000;
+    /*box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);*/
     float: left;
 }
 
