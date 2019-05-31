@@ -57,9 +57,7 @@ class Mgr extends React.Component {
     })
   }
 
-  // function callApi(data){
   callApi = (data) => {
-    console.log("callApi",data)
     fetch(myappAddr, {
       method: 'POST', // or 'PUT'
       body: JSON.stringify(data),
@@ -169,11 +167,16 @@ class Mgr extends React.Component {
 
     const mainClb = (json) => {
       this.setState({nextToken: json.nextPageToken})
+      const finIds = []
       json.items.forEach(channel => {
-        this.getChannelData(channel.id.channelId, getChanClb)
+        if(!finIds.includes(channel.id.channelId)){
+          finIds.push(channel.id.channelId)
+          this.getChannelData(channel.id.channelId, getChanClb)
+        }
+        else
+          completedNum++
       })
       const countup = () => {
-        console.log(completedNum)
         if(json.items.length === completedNum)
           this.setState({searchResult: curChannelResult})
         else
@@ -208,7 +211,6 @@ class Mgr extends React.Component {
 
   handleKeyPress(event) {
     if(event.key == 'Enter') {
-      console.log("enter",event.target.value,event.target.name)
       switch(event.target.name) {
         case "channelId":
           this.addChannel(event.target.value)
