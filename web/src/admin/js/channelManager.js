@@ -161,7 +161,7 @@ class Mgr extends React.Component {
 
     const getChanClb = (json) => {
       const chanData = json.items[0]
-      curChannelResult.push(chanData)
+      if(chanData) curChannelResult.push(chanData)
       completedNum++
     }
 
