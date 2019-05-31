@@ -13,7 +13,7 @@ class Mgr extends React.Component {
     super(props)
     this.state = {channelData: [], videoData: [], selectedChannelIds: [], curCategory: "ニュース",
       selectedCategory: "ニュース", selectedSubCategory: "地震", visibleCont: "channels", categoryInputMode: true,
-      mainCategoryInputs: [], subCategoryInputs: [], searchResult: []}
+      mainCategoryInputs: [], subCategoryInputs: [], searchResult: [], lastSearchedWord: null, nextToken: null}
     // this. = this..bind(this)
     this.clearSelect = this.clearSelect.bind(this)
     this.onChangeCategorySelector = this.onChangeCategorySelector.bind(this)
@@ -95,14 +95,22 @@ class Mgr extends React.Component {
     this.clearSelect()
   }
 
+  fetchYTLapper = (reqKind, params, clb) => {
+    fetch(ytAddr + reqKind +'?' + params.toString()).then(res => res.json()).then(json => {
+      clb(json)
+    })
+  }
+
   addChannel = (channelId) => {
-    const sendData = {
-          opType: 'add',
-          maincategory: this.state.selectedCategory,
-          subcategory: this.state.selectedSubCategory,
-          channelid: channelId,
-    }
     const clb = (chanData) => {
+      if(chanData.items)
+        chanData = json.items[0]
+      const sendData = {
+            opType: 'add',
+            maincategory: this.state.selectedCategory,
+            subcategory: this.state.selectedSubCategory,
+      }
+      sendData.channelid = chanData.id,
       sendData.title = chanData.snippet.title
       sendData.viewcount = chanData.statistics.viewCount
       sendData.videocount = chanData.statistics.videoCount
@@ -114,7 +122,16 @@ class Mgr extends React.Component {
       sendData.publish_date = chanData.snippet.publishedAt
       this.callApi(sendData)
     }
-    this.getChannelData(channelId, clb)
+    if(this.state.visibleCont === 'searchResult') {
+      this.state.searchResult.forEach(chanData => {
+        if(this.state.selectedChannelIds.includes(chanData.id))
+          clb(chanData);
+      })
+      this.clearSelect()
+    }
+    else {
+      this.getChannelData(channelId, clb)
+    }
   }
 
   getChannelData = (channelId, clb) => {
@@ -122,34 +139,54 @@ class Mgr extends React.Component {
     params.set('key', apiKey)
     params.set('part',  'statistics,snippet,brandingSettings,contentDetails')
     params.set('id', channelId)
-    fetch(ytAddr + 'channels?' + params.toString()).then(res => res.json()).then(json => {
-      clb(json.items[0])
-    })
+    this.fetchYTLapper('channels', params, clb)
   }
 
-  searchChannel = (word) => {
+  searchChannel = (word, isNewSearch) => {
     const params = new URLSearchParams();
     params.set('key', apiKey)
     params.set('part', 'snippet')
     params.set('maxResults', 50)
+    params.set('order', 'viewCount')
     params.set('type', 'channel')
-    params.set('q',  word)
-    const curChannelResult = []
-    const clb = (chanData) => {
-      curChannelResult.push(chanData)
-      this.setState({searchResult: curChannelResult})
+    params.set('q', word)
+    params.set('regionCode', 'JP')
+
+    let completedNum = 0;
+    let curChannelResult = this.state.searchResult
+    if(isNewSearch) {
+      curChannelResult = []
+      this.setState({nextToken: null})
     }
-    fetch(ytAddr + 'search?' + params.toString()).then(res => res.json()).then(json => {
-        json.items.forEach(channel => {
-          console.log("searchChannel", channel.snippet.title)
-          this.getChannelData(channel.snippet.channelId, clb)
-        })
-    })
+    else if(this.state.nextToken)
+      params.set('pageToken', this.state.nextToken)
+
+    const getChanClb = (json) => {
+      const chanData = json.items[0]
+      curChannelResult.push(chanData)
+      completedNum++
+    }
+
+    const mainClb = (json) => {
+      this.setState({nextToken: json.nextPageToken})
+      json.items.forEach(channel => {
+        this.getChannelData(channel.id.channelId, getChanClb)
+      })
+      const countup = () => {
+        console.log(completedNum)
+        if(json.items.length === completedNum)
+          this.setState({searchResult: curChannelResult})
+        else
+          setTimeout(countup, 100);
+      }
+      countup();
+    }
+    this.fetchYTLapper('search', params, mainClb)
   }
 
-  componentDidMount() {
-    console.log("componentDidMount")
-    this.fetchData("channelData")
+  searchMore = () => {
+    if(this.state.nextToken)
+      this.searchChannel(this.state.lastSearchedWord, false)
   }
 
   selecteChannel(channelId){
@@ -185,7 +222,8 @@ class Mgr extends React.Component {
           this.setState({subCategoryInputs: curSubList.concat(event.target.value)})
           break
         case "search":
-          this.searchChannel(event.target.value)
+          this.searchChannel(event.target.value, true)
+          this.setState({lastSearchedWord: event.target.value})
           this.setState({visibleCont: "searchResult" })
           break
       }
@@ -247,11 +285,17 @@ class Mgr extends React.Component {
           </div>
       )
     })
+    searchCont.push(<div className="chan-box" onClick={this.searchMore}><h2>more</h2></div>)
     return searchCont
   }
 
-  render(){
+  componentDidMount() {
+    console.log("componentDidMount")
+    this.fetchData("channelData")
+  }
 
+  render(){
+    console.log("render")
     const categoryCont = []
     const categorySelectorCont = []
     const subCategorySelectorCont = []
@@ -374,6 +418,7 @@ class Mgr extends React.Component {
             <p><select size="10" name="mainCategory" value={this.state.selectedCategory} onChange={this.onChangeCategorySelector}>{categorySelectorCont}</select></p>
             <p><select size="10" name="subCategory" value={this.state.selectedSubCategory}
             onChange={this.onChangeSubCategorySelector}>{subCategorySelectorCont}</select></p>
+            <button onClick={this.addChannel}>Add</button>
             <button onClick={this.moveChannel}>Move</button>
             <button onClick={this.clearSelect}>Clear</button>
             <div className="inputs">
