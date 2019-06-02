@@ -24,7 +24,8 @@ function get_channel_cont($chan_data=null)
 	if (strlen($chan_data['description'])) {
 		$description = "<span class=\"description\"><img id=\"desc-img\" src=\"https://img.icons8.com/ios/50/000000/questions.png\" /> <p>{$chan_data['description']}</p></span>";
 	}
-	$social_blade = "<a href=\"https://socialblade.com/youtube/channel/{$chan_data['channelid']}\" target=_blank> <img id=\"sb-img\" src =\"img/sb.png\"/></a>";
+	$social_blade = "<a href=\"https://socialblade.com/youtube/channel/{$chan_data['channelid']}\" target=_blank
+	title=\"socialblade\"> <img id=\"sb-img\" src =\"img/sb.png\"/></a>";
 	$view_count = digit_handler($chan_data['viewcount']);
 	$video_count = digit_handler($chan_data['videocount']);
 	$subscriber_count = digit_handler($chan_data['subscribercount']);
