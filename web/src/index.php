@@ -31,7 +31,10 @@ function get_channel_cont($chan_data=null)
 
 	$chan_detail = "<div class=\"detail-box\">$description$social_blade</div>";
 
-	$chan_info = "<div class=\"counter-box\"><p>$view_count</p><p>$video_count</p><p>$subscriber_count</p></div>$chan_detail";
+	$chan_info = "<div class=\"counter-box\">
+					<p title=\"ViewCount\"><img src=\"https://img.icons8.com/material-two-tone/24/000000/video.png\" id=\"view-img\">$view_count</p>
+					<p title=\"VideoCount\"><img src=\"https://img.icons8.com/metro/26/000000/documentary.png\" id=\"video-img\">$video_count</p>
+					<p title=\"SubscriberCount\"><img src=\"https://img.icons8.com/material-sharp/24/000000/user-group-man-man.png\" id=\"subscr-img\">$subscriber_count</p></div>$chan_detail";
 	$cont = sprintf('<img src="%s"><div class="chan-info-box">%s</div><div class ="chan-title-box"><a href="%s%s" target=_blank title="%s">%s</a></div>', $chan_data['thumbnailurl'], $chan_info, $youtube_url, $chan_data['channelid'], $chan_data['channeltitle'] ,$chan_data['channeltitle']);
 	return '<div class="chan-box">'. $cont .'</div>';
 }

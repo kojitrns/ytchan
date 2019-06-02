@@ -88,6 +88,28 @@ body{
 	 margin-right: 4px;
 }
 
+#view-img {
+	 width: 15px;
+	 height: 15px;
+	 margin-right: 5px;
+	 margin-top: 2px;
+}
+
+#video-img {
+	 width: 15px;
+	 height: 15px;
+	 margin-right: 5px;
+	 margin-top: 2px;
+}
+
+#subscr-img {
+	 width: 15px;
+	 height: 15px;
+	 margin-right: 5px;
+	 margin-top: 2px;
+}
+
+
 .chan-info-box {
 	width: 60%;
 	height: 75%;
