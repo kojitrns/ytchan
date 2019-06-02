@@ -7,6 +7,13 @@ const ytAddr = "https://www.googleapis.com/youtube/v3/"
 const apiKey = "AIzaSyD3R2gavNlItHEZWTt-_UOMEwFwMN5reiQ"
 const tableMap = {channelData: "channel", videoData: "video"}
 
+var playerSet = false
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+var ytPlayer = null
+
 class Mgr extends React.Component {
 
   constructor(props) {
@@ -291,6 +298,46 @@ class Mgr extends React.Component {
     return searchCont
   }
 
+  playVideo(event) {
+    console.log("playVideo")
+    const videoId = event.target.id
+
+    $('body, html').scrollTop(0);
+    if(!playerSet){
+      playerSet = true
+      ytPlayer = new YT.Player(
+      'player', // 埋め込む場所の指定
+        {
+          width: 740, // プレーヤーの幅
+          height: 500, // プレーヤーの高さ
+          videoId: videoId,
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        }
+      );
+    }
+    else {
+      ytPlayer.loadVideoById(videoId ,0);
+    }
+    function nextVideoProcess(){
+    }
+    function onPlayerStateChange(event){
+      switch(event.data) {
+        case YT.PlayerState.ENDED:
+          // nextVideoProcess();
+          break;
+      }
+    }
+    function onPlayerReady(event) {
+      event.target.playVideo();
+    }
+    function onError(event) {
+      nextVideoProcess();
+    }
+  }
+
   componentDidMount() {
     console.log("componentDidMount")
     this.fetchData("channelData")
@@ -391,6 +438,7 @@ class Mgr extends React.Component {
                 <a href={"https://www.youtube.com/channel/" + data['channel_id']} target="_blank" title={data['channel_title']}>
                 <p>{data['channel_title']}</p></a>
                 <span> {data['view_count']+ " views  "}</span> <span>{data['published_at'].split("T")[0]}</span>
+                <span onClick={this.playVideo} id={data['video_id']}> play</span>
               </div>)
         })
         videoCont.push(<div className="clearfix">{videoSubCont}</div>)
@@ -407,6 +455,7 @@ class Mgr extends React.Component {
         <div className="header-emb"></div>
         <div className="left-panel">{leftPanelCont}</div>
         <div className="main-category-panel">
+        <center><p><div id="player"></div></p></center>
           <p><label>検索:</label><input type="text" name="search" onKeyPress={this.handleKeyPress} /></p>
           {mainCont}
         </div>
