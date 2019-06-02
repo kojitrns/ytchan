@@ -57,7 +57,7 @@ def delete_video(channel_id, cur):
 def update_channel(channel_id, uplist_id, cur):
 	cur.execute('UPDATE channel SET uploads_list_id = %s WHERE channelid = %s;', (uplist_id, channel_id,))
 
-def is_exist_channel(channel_id,table_name, cur):
+def is_exist_channel(channel_id, cur):
 	cur.execute('SELECT EXISTS(SELECT * FROM channel WHERE channelid = %s)', (channel_id,))
 	return cur.fetchone()[0]
 
