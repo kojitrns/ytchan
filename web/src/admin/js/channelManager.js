@@ -109,7 +109,7 @@ class Mgr extends React.Component {
   addChannel = (channelId) => {
     const clb = (chanData) => {
       if(chanData.items)
-        chanData = json.items[0]
+        chanData = chanData.items[0]
       const sendData = {
             opType: 'add',
             maincategory: this.state.selectedCategory,
