@@ -205,7 +205,18 @@ class Mgr extends React.Component {
       this.setState({selectedChannelIds: curList.filter(id => id!==channelId)})
       return
     }
-    this.setState({selectedChannelIds: curList.concat(channelId)})
+    curList.push(channelId)
+    this.setState({selectedChannelIds: curList})
+  }
+
+  selecteChannelOfSubcategory(subCategory) {
+    const channels = this.state.channelData
+    const curList = this.state.selectedChannelIds
+    const subcategoryArray = this.state.channelData[this.state.curCategory][subCategory]
+    subcategoryArray.forEach(channel => {
+      curList.push(channel['channelid'])
+    })
+    this.setState({selectedChannelIds: curList})
   }
 
   clearSelect() {
@@ -380,7 +391,8 @@ class Mgr extends React.Component {
       subcategoryList.forEach(subcategory => {
         const subcategoryArray = this.state.channelData[this.state.curCategory][subcategory]
         const channelTable = []
-        channelTable.push(<h3 id={subcategory}>■{subcategory}</h3>)
+        channelTable.push(<h3 id={subcategory} onClick={this.selecteChannelOfSubcategory.bind(this, subcategory)}>
+          ■{subcategory}</h3>)
         leftPanelCont.push(<p><a href={"#"+subcategory}>{subcategory}</a></p>)
         subcategoryArray.sort(function(a,b){
           if(a.viewcount < b.viewcount) return 1;
