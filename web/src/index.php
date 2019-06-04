@@ -8,6 +8,7 @@
 <?php
 // phpinfo();
 $youtube_url = 'https://www.youtube.com/channel/';
+$cur_category = '';
 // header('Content-Type: application/json');
 
 function digit_handler($num) {
@@ -46,7 +47,7 @@ function get_video_cont($video_data=null)
 	$view_count = $video_data['view_count']+ " views  ";
     return 
     "<div class=\"video-box\">
-      <a href=\"https://www.youtube.com/watch?v={$video_data['video_id']}\" target=\"_blank\">
+      <a href=\"https://www.youtube.com/watch?v={$video_data['video_id']}\" target=\"_blank\" title={$video_data['video_title']}>
       <img src = \"{$video_data['thumbnail']}\" />
       <p>{$video_data['video_title']}</p></a>
       <a href=\"https://www.youtube.com/channel/{$video_data['channel_id']}\" target=\"_blank\" title=\"{$video_data['channel_title']}\">
@@ -75,23 +76,54 @@ function set_channel_database(&$category_list, $table_name)
 }
 
 function show_header(&$category_list) {
-	echo '<header class="site-header"><nav><b>カテゴリ: </b>';
-	$mode = '';
-	if(isset($_GET['mode']))
-		$mode = $_GET['mode'];
-	foreach ($category_list as $maincategory => $sub_categories) {
-		echo "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$maincategory&mode=$mode\">$maincategory</a> ";
+	global $cur_category;
+	echo '<header><div class="header-cont">
+	<div class="site-title"><p>チャンネルずかん</p></div>';
+	$mode_cont = '';
+	if(isset($_GET['mode']) && $_GET['mode'] == 'video') {
+		$mode_cont = "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=channel\">
+		  チャンネル</a> / 最近の動画";
+	} else {
+		$mode_cont = " チャンネル / <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=video\">
+	      最近の動画</a>";
 	}
-	echo '</nav></header><div class="header-emb"></div>';
+	echo "<div class=\"mode-selector\">$mode_cont</div>";
+	echo '</div></header>';
 }
 
-
-function show_left_panel(&$sub_categories) {
-	echo '<div class="left-panel">';
-	foreach ($sub_categories as $sub_category) {
-		echo "<a href=\"#$sub_category\">・$sub_category</a></br> ";
+function show_left_panel(&$category_list) {
+	global $cur_category;
+	$mode = 'channel';
+	if(isset($_GET['mode']))
+		$mode = $_GET['mode'];
+	$main_categories = array();
+	foreach ($category_list as $maincategory => $subc) {
+		$main_categories[] = $maincategory;
+		// echo "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$maincategory&mode=$mode\">$maincategory</a> ";
 	}
-	echo '</div>';
+	sort($main_categories);
+
+	$sub_categories = array_keys($category_list[$cur_category]);
+
+	echo '<div class="left-panel"><p>カテゴリ</p><div class="category-zone">';
+	foreach ($sub_categories as $sub_category) {
+		echo "<a href=\"#$sub_category\">・$sub_category</a></br>";
+	}
+	foreach ($main_categories as $maincategory) {
+		echo "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$maincategory&mode=$mode\">$maincategory</a></br>";
+	}
+	echo '</div></div>';
+}
+
+function show_right_panel()
+{
+	echo '<div class="right-panel">
+	<p>Youtubeのいろんなチャンネルをカテゴライズしてまとめてます。</p>
+	</div>';
+}
+
+function show_footer() {
+	echo '<footer></footer>';
 }
 
 function sort_chan_rows(&$chan_rows, $sort_target) {
@@ -103,7 +135,6 @@ function sort_chan_rows(&$chan_rows, $sort_target) {
 }
 
 $category_list = array();
-$cur_category = '';
 
 if(!isset($_GET['mode']) || $_GET['mode']=='channel') {
 	set_channel_database($category_list, 'channel');
@@ -111,32 +142,21 @@ if(!isset($_GET['mode']) || $_GET['mode']=='channel') {
 	set_channel_database($category_list, 'video');
 }
 
-show_header($category_list);
-
 if(isset($_GET['cur_category'])) {
 	$cur_category = $_GET['cur_category'];
 } else {
 	$cur_category = 'ニュース';
 }
 
-show_left_panel(array_keys($category_list[$cur_category]));
+show_header($category_list);
+show_left_panel($category_list);
 
 echo "<div class=\"main-category-panel\"><h2>$cur_category</h2>";
-$mode_cont = '';
-if(isset($_GET['mode']) && $_GET['mode'] == 'video') {
-	$mode_cont = "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=channel\">
-	  チャンネル</a> / 最近の動画";
-} else {
-	$mode_cont = " チャンネル / <a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$cur_category&mode=video\">
-      最近の動画</a>";
-}
-echo "<div class=\"mode-selector\">$mode_cont</div>";
-
 $sub_categories = $category_list[$cur_category];
 
 if(!isset($_GET['mode']) || $_GET['mode']=='channel')
 foreach ($sub_categories as $subcategory => $rows) {
-	echo "<div class=\"chan-container clearfix\"><h3 id=\"$subcategory\">■$subcategory</h3>";
+	echo "<div class=\"clearfix\"><h3 id=\"$subcategory\">■$subcategory</h3>";
 	sort_chan_rows($rows, 'viewcount');
 	foreach ($rows as $row) {
 		echo get_channel_cont($row);
@@ -155,5 +175,6 @@ else {
 }
 
 echo '</div>';
+show_footer();
 ?>
 </body></html>

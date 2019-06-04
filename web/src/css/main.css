@@ -1,14 +1,46 @@
 @charset "utf-8";
 /* CSS Document */
 
+html {
+	min-height: 100%;
+	position: relative;
+}
+
 body{
 	background-color: #FFFFFF;
 	font-family: Roboto,Arial,Helvetica,sans-serif;
 	overflow-x: hidden;
 	margin: 0px;
+	padding: 0px;
+	margin-bottom: 100px;
 }
 
-.site-header {
+header {
+	display: block;
+}
+
+.header-cont {
+	width: 100%;
+	height: 3rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: #D3DCE2;
+}
+
+.site-title {
+	float: left;
+	padding: 10px;
+}
+
+.site-title p {
+	font-size: 22px;
+	font-weight: bold;
+	color: #257E25;
+	margin: 0;
+}
+
+/*.site-header {
 	width: 80%;
 	margin-left: 7%;
 	background-color: #FFFFFFD1;
@@ -23,37 +55,59 @@ body{
 	width: 100%;
 	height: 50px;
 }
-
+*/
 .left-panel{
-	width: 7%;
+	width: 8%;
+	height: 66%;
+	top: 5rem;
 	float: left;
 	position: fixed;
+}
+
+.category-zone {
+	height: 100%;
+	overflow: scroll;
+	overflow-x: hidden;
+}
+
+.left-panel p {
+	font-weight: bold;
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 0;
+	background-color: #D3DCE2;
+}
+
+div::-webkit-scrollbar{
+　　height: 1px;
+}
+
+.right-panel {
+	top: 5rem;
+	left: 90%;
 }
 
 .main-category-panel{
 	width: 80%;
 	padding-top: 10px;
 	margin-top: 10px;
-	margin-left: 7%;
+	margin-left: 9%;
 }
 
 .main-category-panel h2{
-	margin: 5px;
+	margin-top: 3rem;
 }
 
 .mode-selector {
 	float: right;
+	margin-top: 1rem;
 	margin-right: 1rem;
 }
 
-.chan-container{
-	margin-top: 15px;
-	margin: 10px;
-}
 
-.chan-container h3{
-	margin-top: -50px;
-	padding-top: 50px;
+.clearfix h3{
+	margin-top: -3.4rem;
+	padding-top: 3.4rem;
 }
 .clearfix:after {
 	clear: both;
@@ -66,7 +120,6 @@ body{
 	min-width: 200px;
 	height: 180px;
     margin: 7px 7px;
-    /*border: solid 2px #FFFFFF;*/
     border: solid 1px #000000;
     /*box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);*/
     float: left;
@@ -191,4 +244,12 @@ body{
 
 .video-box img {
 	width: 100%;
+}
+
+footer {
+	background-color: #B9B9B9;
+	width: 100%;
+	height: 100px;
+	position: absolute;
+	bottom: 0;
 }
