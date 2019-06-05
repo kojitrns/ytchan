@@ -23,7 +23,7 @@ function get_channel_cont($chan_data=null)
 	$description = '';
 	$keywords = '';
 	if (strlen($chan_data['description'])) {
-		$description = "<span class=\"description\"><img id=\"desc-img\" src=\"https://img.icons8.com/ios/50/000000/questions.png\" /> <p>{$chan_data['description']}</p></span>";
+		$description = "<span class=\"description\"><img id=\"desc-img\" src=\"https://img.icons8.com/ios/50/000000/questions.png\" /><p>{$chan_data['description']}</p></span>";
 	}
 	$social_blade = "<a href=\"https://socialblade.com/youtube/channel/{$chan_data['channelid']}\" target=_blank
 	title=\"socialblade\"> <img id=\"sb-img\" src =\"img/sb.png\"/></a>";
@@ -150,13 +150,14 @@ if(isset($_GET['cur_category'])) {
 
 show_header($category_list);
 show_left_panel($category_list);
+show_right_panel();
 
-echo "<div class=\"main-category-panel\"><h2>$cur_category</h2>";
+echo "<main><h2>$cur_category</h2>";
 $sub_categories = $category_list[$cur_category];
 
 if(!isset($_GET['mode']) || $_GET['mode']=='channel')
 foreach ($sub_categories as $subcategory => $rows) {
-	echo "<div class=\"clearfix\"><h3 id=\"$subcategory\">■$subcategory</h3>";
+	echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
 	sort_chan_rows($rows, 'viewcount');
 	foreach ($rows as $row) {
 		echo get_channel_cont($row);
@@ -165,7 +166,7 @@ foreach ($sub_categories as $subcategory => $rows) {
 }
 else {
 	foreach ($sub_categories as $subcategory => $rows) {
-	echo "<div class=\"clearfix\"><h3 id=\"$subcategory\">■$subcategory</h3>";
+	echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
 	foreach ($rows as $row) {
 		echo get_video_cont($row);
 	}
@@ -174,7 +175,7 @@ else {
 
 }
 
-echo '</div>';
+echo '</main>';
 show_footer();
 ?>
 </body></html>
