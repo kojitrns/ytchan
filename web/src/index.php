@@ -4,14 +4,18 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="description" content="YouTubeの様々なチャンネル（投稿者）をジャンル別にまとめています。各チャンネルの最新動画の情報も載せてます。" />
 	<link rel="icon" href="https://img.icons8.com/nolan/64/000000/video-call.png" sizes="16x16" type="image/png" />
-	<link rel="stylesheet" type="text/css" href="https://ytchan.herokuapp.com/css/main.css">
+	<?php
+	if($_SERVER['SERVER_NAME'] == 'localhost')
+		echo '<link rel="stylesheet" type="text/css" href="../css/main.css">';
+	else
+		echo '<link rel="stylesheet" type="text/css" href="https://ytchan.herokuapp.com/css/main.css">';
+	?>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-141605464-1"></script>
 	<script>
 	  window.dataLayer = window.dataLayer || [];
 	  function gtag(){dataLayer.push(arguments);}
 	  gtag('js', new Date());
-
 	  gtag('config', 'UA-141605464-1');
 	</script>
     <title>チャンネルずかん</title>
@@ -58,6 +62,7 @@ function get_channel_cont($chan_data=null)
 					<p title=\"VideoCount\"><img src=\"https://img.icons8.com/metro/26/000000/documentary.png\" id=\"video-img\">$video_count</p>
 					<p title=\"SubscriberCount\"><img src=\"https://img.icons8.com/material-sharp/24/000000/user-group-man-man.png\" id=\"subscr-img\">$subscriber_count</p></div>$chan_detail";
 	$cont = sprintf('<img src="%s"><div class="chan-info-box">%s</div><div class ="chan-title-box"><a href="%s%s" target=_blank title="%s">%s</a></div>', $chan_data['thumbnailurl'], $chan_info, $youtube_url, $chan_data['channelid'], $chan_data['channeltitle'] ,$chan_data['channeltitle']);
+
 	return '<div class="chan-box">'. $cont .'</div>';
 }
 
@@ -109,6 +114,7 @@ function show_header(&$category_list) {
 	      最近の動画</a>";
 	}
 	echo "<div class=\"mode-selector\">$mode_cont</div>";
+	show_tweet_btn();
 	echo '</div></header>';
 }
 
@@ -140,8 +146,14 @@ function show_right_panel()
 	</div>';
 }
 
+function show_tweet_btn() {
+	global $cur_category;
+	$text = "Youtube チャンネルずかん カテゴリ：$cur_category\"";
+	$url = "https://ytchan.herokuapp.com". urldecode($_SERVER['REQUEST_URI']);
+	echo '<span class="tw-btn"><a href="https://twitter.com/share?url='. $url  .'&text=' .$text. ' class="twitter-share-button" data-show-count="false">Tweet</a></span><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
+}
+
 function show_footer() {
-	// echo '<div class="footer"></div>';
 	echo '<footer></footer>';
 }
 
