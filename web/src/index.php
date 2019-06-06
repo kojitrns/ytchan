@@ -154,7 +154,9 @@ function show_tweet_btn() {
 }
 
 function show_footer() {
-	echo '<footer></footer>';
+	echo '<footer>
+	<p>© Copyright 2019 チャンネルずかん All rights reserved.</p>
+	</footer>';
 }
 
 function sort_chan_rows(&$chan_rows, $sort_target) {

@@ -78,7 +78,7 @@ header {
 
 .tw-btn {
 	float: right;
-	margin-top: 0.9rem;
+	margin-top: 1rem;
 	margin-right: 1rem;
 }
 
@@ -249,9 +249,15 @@ main {
 }
 
 footer {
-	background-color: #B9B9B9;
+	background-color: #D3DCE2;
 	width: 100%;
 	height: 100px;
 	position: absolute;
 	bottom: 0;
+	text-align: center;
+}
+
+footer p{
+	margin-top: 75px;
+	margin-bottom: 0;
 }
