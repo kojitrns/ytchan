@@ -19,6 +19,11 @@ header {
 	display: block;
 }
 
+header img {
+	margin-left: 10px;
+	float: left;
+}
+
 .header-cont {
 	width: 100%;
 	height: 3rem;
@@ -36,7 +41,7 @@ header {
 .site-title p {
 	font-size: 22px;
 	font-weight: bold;
-	color: #257E25;
+	color: #6C5BE6;
 	margin: 0;
 }
 

@@ -104,7 +104,7 @@ function show_header(&$category_list) {
 
 	global $cur_category, $mode;
 	echo '<header><div class="header-cont">
-	<div class="site-title"><p>チャンネルずかん</p></div>';
+	<img src="https://img.icons8.com/nolan/64/000000/video-call.png" width=40px height=40px><div class="site-title"><p>チャンネルずかん</p></div>';
 	$mode_cont = '';
 	if($mode == 'video') {
 		$mode_cont = "<a href=\"/$cur_category/channel\">
