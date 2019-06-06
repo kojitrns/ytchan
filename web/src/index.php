@@ -5,6 +5,15 @@
 	<meta name="description" content="YouTubeの様々なチャンネル（投稿者）をジャンル別にまとめています。各チャンネルの最新動画の情報も載せてます。" />
 	<link rel="icon" href="https://img.icons8.com/nolan/64/000000/video-call.png" sizes="16x16" type="image/png" />
 	<link rel="stylesheet" type="text/css" href="https://ytchan.herokuapp.com/css/main.css">
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-141605464-1"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-141605464-1');
+	</script>
     <title>チャンネルずかん</title>
 </head>
 <body>
