@@ -149,7 +149,7 @@ function show_right_panel()
 function show_tweet_btn() {
 	global $cur_category;
 	$text = "Youtube チャンネルずかん カテゴリ：$cur_category\"";
-	$url = "https://ytchan.herokuapp.com". urldecode($_SERVER['REQUEST_URI']);
+	$url = "https://ytchan.herokuapp.com". urlencode($_SERVER['REQUEST_URI']);
 	echo '<span class="tw-btn"><a href="https://twitter.com/share?url='. $url  .'&text=' .$text. ' class="twitter-share-button" data-show-count="false">Tweet</a></span><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
 }
 
