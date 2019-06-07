@@ -105,6 +105,9 @@ function show_header(&$category_list) {
 	global $cur_category, $mode;
 	echo '<header><div class="header-cont">
 	<img src="https://img.icons8.com/nolan/64/000000/video-call.png" width=40px height=40px><div class="site-title"><p>チャンネルずかん</p></div>';
+
+	show_btns_on_header();
+
 	$mode_cont = '';
 	if($mode == 'video') {
 		$mode_cont = "<a href=\"/$cur_category/channel\">
@@ -114,7 +117,6 @@ function show_header(&$category_list) {
 	      最近の動画</a>";
 	}
 	echo "<div class=\"mode-selector\">$mode_cont</div>";
-	show_tweet_btn();
 	echo '</div></header>';
 }
 
@@ -142,11 +144,13 @@ function show_left_panel(&$category_list) {
 function show_right_panel()
 {
 	echo '<div class="right-panel">
-	<p>Youtubeのいろんなチャンネルをカテゴライズしてまとめてます。</p>
+	<p>Youtubeのいろんなチャンネルをまとめてます。最近の動画はここ１週間でアップされたものです。ジャンルの分類、チャンネル追加など毎日更新。</p>
 	</div>';
 }
 
-function show_tweet_btn() {
+function show_btns_on_header() {
+	echo '<a href="https://www.youtube.com/" target=_blank title="Youtube"><img src="https://img.icons8.com/windows/32/000000/youtube.png" class="yt-btn"></a>';
+
 	global $cur_category;
 	$text = "Youtube チャンネルずかん カテゴリ：$cur_category\"";
 	$url = "https://ytchan.herokuapp.com". urlencode($_SERVER['REQUEST_URI']);
@@ -177,7 +181,6 @@ if($mode == 'channel') {
 
 show_header($category_list);
 show_left_panel($category_list);
-show_right_panel();
 
 echo "<main><h2>$cur_category</h2>";
 $sub_categories = $category_list[$cur_category];
@@ -203,6 +206,7 @@ else {
 }
 
 echo '</main>';
+show_right_panel();
 show_footer();
 ?>
 </body></html>
