@@ -260,18 +260,21 @@ class Mgr extends React.Component {
     this.setState({selectedSubCategory: event.target.value})
   }
 
-  onChangeMode() {
+  onChangeMode(mode) {
     const currentCont = this.state.visibleCont
     let nextCont = null
-    switch(currentCont) {
-      case "channels":
-        nextCont = "videos"
-        break
-      case "videos":
-        nextCont = "channels"
-        break
-      default :
-        nextCont = "channels"
+    if(mode === 'search') nextCont = 'searchResult'
+    else {
+      switch(currentCont) {
+        case "channels":
+          nextCont = "videos"
+          break
+        case "videos":
+          nextCont = "channels"
+          break
+        default :
+          nextCont = "channels"
+      }
     }
     this.setState({visibleCont: nextCont})
 
@@ -468,7 +471,7 @@ class Mgr extends React.Component {
         <div className="left-panel">{leftPanelCont}</div>
         <div className="main-category-panel">
         <center><p><div id="player"></div></p></center>
-          <p><label>検索:</label><input type="text" name="search" onKeyPress={this.handleKeyPress} /></p>
+          <p><label onClick={this.onChangeMode.bind(this, "search")}>検索:</label><input type="text" name="search" onKeyPress={this.handleKeyPress} /></p>
           {mainCont}
         </div>
         <div className="controlPanel">
