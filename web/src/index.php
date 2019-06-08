@@ -49,13 +49,17 @@ function get_channel_cont($chan_data=null)
 	if (strlen($chan_data['description'])) {
 		$description = "<span class=\"description\"><img id=\"desc-img\" src=\"https://img.icons8.com/ios/50/000000/questions.png\" /><p>{$chan_data['description']}</p></span>";
 	}
+	$uplist = "<a href=\"https://youtube.com/channel/{$chan_data['channel_id']}/videos\" target=_blank
+	title=\"videos\"> <img id=\"uplist-img\" src =\"https://ytchan.herokuapp.com/img/videos.png\"/></a>";
 	$social_blade = "<a href=\"https://socialblade.com/youtube/channel/{$chan_data['channel_id']}\" target=_blank
 	title=\"socialblade\"> <img id=\"sb-img\" src =\"https://ytchan.herokuapp.com/img/sb.png\"/></a>";
+
+
 	$view_count = digit_handler($chan_data['view_count']);
 	$video_count = digit_handler($chan_data['video_count']);
 	$subscriber_count = digit_handler($chan_data['subscriber_count']);
 
-	$chan_detail = "<div class=\"detail-box\">$description$social_blade</div>";
+	$chan_detail = "<div class=\"detail-box\">$description$uplist$social_blade</div>";
 
 	$chan_info = "<div class=\"counter-box\">
 					<p title=\"ViewCount\"><img src=\"https://img.icons8.com/material-two-tone/24/000000/video.png\" id=\"view-img\">$view_count</p>

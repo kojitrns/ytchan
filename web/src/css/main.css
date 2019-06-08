@@ -146,11 +146,19 @@ main {
 	 height: 25px;
 }
 
+#uplist-img {
+	 width: 20px;
+	 height: 25px;
+	 margin-right: 6px;
+}
+
 #desc-img {
 	 width: 25px;
 	 height: 25px;
 	 margin-right: 4px;
 }
+
+
 
 #view-img {
 	 width: 15px;
