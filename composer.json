@@ -1,6 +1,7 @@
 {
     "name": "koji/ytchan",
     "require": {
-        "php" : "^7.0.33"
+        "php" : "^7.0.33",
+	"ext-mbstring": "*"
     }
 }
