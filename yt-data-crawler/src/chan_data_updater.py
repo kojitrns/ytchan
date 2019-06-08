@@ -6,36 +6,44 @@ import api_handler as ytapi
 ROW_CONTENTS = ['main_category','sub_category','channel_id','title','viewCount','videoCount','subscriberCount',
 'thumbnail_url','description','keywords','uploads_id', 'publishe_date']
 
-DATA_ROW_MAPPING = {}
+dup_list = []
 
-def init():
-	for (id , content) in enumerate(ROW_CONTENTS):
-		DATA_ROW_MAPPING[content] = id
-	pprint.pprint(DATA_ROW_MAPPING)
+# def init():
 
-def update_channel_data(conn, cur, channel_id, main_category, sub_category):
+def update_channel_data(conn, cur, channel_id):
+	channels = db.get_channel_from_id(channel_id, cur)
+	if len(channels) > 1:
+		dup_list.append(channel_id)
+		
 	db.delete_channel(channel_id, cur)
-	chan_data = ytapi.get_channel_data(channel_id, 3)
+
+	chan_data = ytapi.get_channel_data(channel_id, 2)
 	if chan_data is None:
 		print("Cound not get chan data")
 		return
 
-	row = [db.chan_record_gen(chan_data, main_category, sub_category)]
-	db.add_data_with_conn(row, 'channel', conn, cur)
+	for old_data in channels:
+		row = [db.chan_record_gen(chan_data, old_data['maincategory'], old_data['subcategory'])]
+		db.add_data_with_conn(row, 'channel', conn, cur)
+
 
 def is_valid_channel(chan_data):
-	return chan_data[DATA_ROW_MAPPING['viewCount']] > 0
+	return chan_data['viewcount'] > 0
 
-init()
+# init()
 
 with db.get_connection() as conn:
-	with conn.cursor() as cur:
+	with conn.cursor(cursor_factory = db.psycopg2.extras.DictCursor) as cur:
 		cur.execute('SELECT * FROM channel')
 		rows = cur.fetchall()
 		for (id, row) in enumerate(rows):
 			if is_valid_channel(row):
-				update_channel_data(conn,cur,row[DATA_ROW_MAPPING['channel_id']],row[DATA_ROW_MAPPING['main_category']],row[DATA_ROW_MAPPING['sub_category']])
+				if not row['channelid'] in dup_list:
+					print("ok")
+					update_channel_data(conn,cur,row['channelid'])
+				else :
+					print("already updated")
 			else:
-				db.delete_channel(row[DATA_ROW_MAPPING['channel_id']], cur)
+				db.delete_channel(row['channelid'], cur)
 				print("delete")
-			print("%d %s %s %s" % (id, row[DATA_ROW_MAPPING['title']],row[DATA_ROW_MAPPING['main_category']],row[DATA_ROW_MAPPING['sub_category']]))
+			print("%d %s %s %s" % (id, row['channeltitle'],row['maincategory'],row['subcategory']))

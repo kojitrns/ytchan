@@ -9,11 +9,8 @@ import api_handler as ytapi
 ROW_CONTENTS = ['main_category','sub_category','channel_id','title','viewCount','videoCount','subscriberCount',
 'thumbnail_url','description','keywords','uploads_id', 'publishe_date']
 
-DATA_ROW_MAPPING = {}
 
-def init():
-	for (id , content) in enumerate(ROW_CONTENTS):
-		DATA_ROW_MAPPING[content] = id
+# def init():
 
 def update_video_data(conn, cur, channel_id, uplist_id, main_category, sub_category):
 	db.delete_video(channel_id, cur)
@@ -27,8 +24,6 @@ def update_video_data(conn, cur, channel_id, uplist_id, main_category, sub_categ
 		row = [db.video_record_gen(video_data, main_category, sub_category)]
 		db.add_data_with_conn(row, 'video', conn, cur)
 
-def is_valid_channel(chan_data):
-	return chan_data[DATA_ROW_MAPPING['viewCount']] > 0
 
 def check_pubulish_date(published_date, span):
 	date = published_date.split('T')[0].split('-')
@@ -36,26 +31,23 @@ def check_pubulish_date(published_date, span):
 	deadline = datetime.date.today() - datetime.timedelta(weeks = span)
 	return deadline < published_date
 
-init()
+# init()
 
 with db.get_connection() as conn:
-	with conn.cursor() as cur:
+	with conn.cursor(cursor_factory = db.psycopg2.extras.DictCursor) as cur:
 		if len(sys.argv) > 1:
 			print(sys.argv)
 			cur.execute('SELECT * FROM channel WHERE channelid = %s', (sys.argv[1],))
 			row = cur.fetchone()
-			if is_valid_channel(row):
-				print(row[DATA_ROW_MAPPING['title']])
-				print(row[DATA_ROW_MAPPING['uploads_id']])
-				update_video_data(conn, cur, row[DATA_ROW_MAPPING['channel_id']], row[DATA_ROW_MAPPING['uploads_id']],
-					row[DATA_ROW_MAPPING['main_category']], row[DATA_ROW_MAPPING['sub_category']])
+			print(row['channeltitle'])
+			print(row['uploads_id'])
+			update_video_data(conn, cur, row['channel_id'], row['uploads_id'],
+				row['main_category'], row['sub_category'])
 			exit()
 
 		cur.execute('SELECT * FROM channel')
 		rows = cur.fetchall()
 		for (id, row) in enumerate(rows):
-			if is_valid_channel(row):
-				print(row[DATA_ROW_MAPPING['title']])
-				print(row[DATA_ROW_MAPPING['uploads_id']])
-				update_video_data(conn, cur, row[DATA_ROW_MAPPING['channel_id']], row[DATA_ROW_MAPPING['uploads_id']],
-					row[DATA_ROW_MAPPING['main_category']], row[DATA_ROW_MAPPING['sub_category']])
+			print(row['channel_title'])
+			update_video_data(conn, cur, row['channel_id'], row['uploads_id'],
+				row['main_category'], row['sub_category'])
