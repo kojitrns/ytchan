@@ -54,18 +54,22 @@ function get_channel_cont($chan_data=null)
 	$social_blade = "<a href=\"https://socialblade.com/youtube/channel/{$chan_data['channel_id']}\" target=_blank
 	title=\"socialblade\"> <img id=\"sb-img\" src =\"https://ytchan.herokuapp.com/img/sb.png\"/></a>";
 
-
 	$view_count = digit_handler($chan_data['view_count']);
 	$video_count = digit_handler($chan_data['video_count']);
 	$subscriber_count = digit_handler($chan_data['subscriber_count']);
 
 	$chan_detail = "<div class=\"detail-box\">$description$uplist$social_blade</div>";
+	$chan_title = $chan_data['channel_title'];
+	$max_len = 34;
+	if(mb_strlen($chan_title) > $max_len) {
+		$chan_title = mb_substr($chan_title, 0, $max_len, "utf-8") ."...";
+	}
 
 	$chan_info = "<div class=\"counter-box\">
 					<p title=\"ViewCount\"><img src=\"https://img.icons8.com/material-two-tone/24/000000/video.png\" id=\"view-img\">$view_count</p>
 					<p title=\"VideoCount\"><img src=\"https://img.icons8.com/metro/26/000000/documentary.png\" id=\"video-img\">$video_count</p>
 					<p title=\"SubscriberCount\"><img src=\"https://img.icons8.com/material-sharp/24/000000/user-group-man-man.png\" id=\"subscr-img\">$subscriber_count</p></div>$chan_detail";
-	$cont = sprintf('<img src="%s"><div class="chan-info-box">%s</div><div class ="chan-title-box"><a href="%s%s" target=_blank title="%s">%s</a></div>', $chan_data['thumbnail_url'], $chan_info, $youtube_url, $chan_data['channel_id'], $chan_data['channel_title'] ,$chan_data['channel_title']);
+	$cont = sprintf('<img src="%s"><div class="chan-info-box">%s</div><div class ="chan-title-box"><a href="%s%s" target=_blank title="%s">%s</a></div>', $chan_data['thumbnail_url'], $chan_info, $youtube_url, $chan_data['channel_id'], $chan_data['channel_title'], $chan_title);
 
 	return '<div class="chan-box">'. $cont .'</div>';
 }
@@ -184,25 +188,25 @@ show_left_panel($category_list);
 echo "<main><h2>$cur_category</h2>";
 $sub_categories = $category_list[$cur_category];
 
-if($mode == 'channel')
-foreach ($sub_categories as $subcategory => $rows) {
-	echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
-	sort_rows($rows, 'view_count');
-	foreach ($rows as $row) {
-		echo get_channel_cont($row);
+if($mode == 'channel') {
+	foreach ($sub_categories as $subcategory => $rows) {
+		echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
+		sort_rows($rows, 'view_count');
+		foreach ($rows as $row) {
+			echo get_channel_cont($row);
+		}
+		echo '</div>';
 	}
-	echo '</div>';
 }
 else {
 	foreach ($sub_categories as $subcategory => $rows) {
-	echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
-	sort_rows($rows, 'published_at');
-	foreach ($rows as $row) {
-		echo get_video_cont($row);
+		echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
+		sort_rows($rows, 'published_at');
+		foreach ($rows as $row) {
+			echo get_video_cont($row);
+		}
+		echo '</div>';
 	}
-	echo '</div>';
-}
-
 }
 
 echo '</main>';
