@@ -364,6 +364,7 @@ class Mgr extends React.Component {
     const subCategorySelectorCont = []
     const leftPanelCont = []
     const mainCont = [<h2>{this.state.curCategory}</h2>]
+    let dataName = 'channelData'
 
     Object.keys(this.state.channelData).forEach(category => {
       categoryCont.push(<span onClick={this.changeCategory.bind(this, category)}>{category} </span>)
@@ -430,6 +431,7 @@ class Mgr extends React.Component {
       mainCont.push(channelPanel)
     }
     else if(this.state.visibleCont === "videos"){
+      dataName = 'videoData'
       const videoCont = []
       if(this.state.videoData[this.state.curCategory])
       subcategoryList.forEach(subcategory => {
@@ -480,7 +482,7 @@ class Mgr extends React.Component {
               <span onClick={this.onChangeMode}>チャンネル/動画</span>
             </div>
             <button onClick={this.deleteChannel}>Delete</button>
-            <button onClick={this.fetchData.bind(this,("channelData"))}>Update</button>
+            <button onClick={this.fetchData.bind(this, dataName)}>Update</button>
             <p><select size="10" name="mainCategory" value={this.state.selectedCategory} onChange={this.onChangeCategorySelector}>{categorySelectorCont}</select></p>
             <p><select size="10" name="subCategory" value={this.state.selectedSubCategory}
             onChange={this.onChangeSubCategorySelector}>{subCategorySelectorCont}</select></p>
