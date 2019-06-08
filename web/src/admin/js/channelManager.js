@@ -79,12 +79,12 @@ class Mgr extends React.Component {
   moveChannel = () => {
     const sendData = {
           opType: 'move',
-          maincategory: this.state.selectedCategory,
-          subcategory: this.state.selectedSubCategory
+          main_category: this.state.selectedCategory,
+          sub_category: this.state.selectedSubCategory
     }
     this.state.selectedChannelIds.forEach(channelId =>
     {
-      sendData.channelid = channelId
+      sendData.channel_id = channelId
       this.callApi(sendData)
     })
     this.clearSelect()
@@ -102,14 +102,14 @@ class Mgr extends React.Component {
         chanData = chanData.items[0]
       const sendData = {
             opType: 'add',
-            maincategory: this.state.selectedCategory,
-            subcategory: this.state.selectedSubCategory,
+            main_category: this.state.selectedCategory,
+            sub_category: this.state.selectedSubCategory,
       }
-      sendData.channelid = chanData.id,
+      sendData.channel_id = chanData.id,
       sendData.title = chanData.snippet.title
-      sendData.viewcount = chanData.statistics.viewCount
-      sendData.videocount = chanData.statistics.videoCount
-      sendData.subscribercount = chanData.statistics.subscriberCount
+      sendData.view_count = chanData.statistics.viewCount
+      sendData.video_count = chanData.statistics.videoCount
+      sendData.subscriber_count = chanData.statistics.subscriberCount
       sendData.thumbnail_url = chanData.snippet.thumbnails.default.url
       sendData.description = chanData.snippet.description
       sendData.keywords = chanData.brandingSettings.channel.keywords
@@ -204,7 +204,7 @@ class Mgr extends React.Component {
     const curList = this.state.selectedChannelIds
     const subcategoryArray = this.state.channelData[this.state.curCategory][subCategory]
     subcategoryArray.forEach(channel => {
-      curList.push(channel['channelid'])
+      curList.push(channel['channel_id'])
     })
     this.setState({selectedChannelIds: curList})
   }
@@ -397,21 +397,21 @@ class Mgr extends React.Component {
         subcategoryArray.forEach(data => {
           channelTable.push(
             <div className="chan-box">
-              <img src = {data['thumbnailurl']} />
-              <div className="chan-info-box" onClick={this.selecteChannel.bind(this, data['channelid'])}>
+              <img src = {data['thumbnail_url']} />
+              <div className="chan-info-box" onClick={this.selecteChannel.bind(this, data['channel_id'])}>
                 <div className="counter-box">
-                  <p>{data['viewcount']}</p><p>{data['videocount']}</p><p>{data['subscribercount']}</p>
+                  <p>{data['view_count']}</p><p>{data['video_count']}</p><p>{data['subscriber_count']}</p>
                 </div>
                 <div className="detail-box">
                   <img id="desc-img" src="https://img.icons8.com/ios/50/000000/questions.png" />
                   <p>{data['description']}</p>
-                  <a href={"https://socialblade.com/youtube/channel/" + data['channelid']} target="_blank" title="socialblade">
+                  <a href={"https://socialblade.com/youtube/channel/" + data['channel_id']} target="_blank" title="socialblade">
                   <img id="sb-img" src ="../img/sb.png"/>
                   </a>
                 </div>
               </div>
-              <div className = {this.state.selectedChannelIds.includes(data['channelid']) ? "selected-title-box":"chan-title-box"}>
-                <a href={"https://www.youtube.com/channel/" + data['channelid']} target="_blank" title={data['channeltitle']}>{data['channeltitle']}</a>
+              <div className = {this.state.selectedChannelIds.includes(data['channel_id']) ? "selected-title-box":"chan-title-box"}>
+                <a href={"https://www.youtube.com/channel/" + data['channel_id']} target="_blank" title={data['channel_title']}>{data['channel_title']}</a>
               </div>
             </div>
           )}

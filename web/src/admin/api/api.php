@@ -12,21 +12,21 @@
 	{
 		$params = json_decode(file_get_contents('php://input'), true);
 		if($params['opType'] == 'delete') {
-			$stmt = $pdo->prepare("DELETE FROM channel WHERE channelid = ?");
+			$stmt = $pdo->prepare("DELETE FROM channel WHERE channel_id = ?");
 			$stmt->bindValue(1, $params['channelid']);
 			$stmt->execute();
 		}
 		elseif($params['opType'] == 'move') {
-			$stmt = $pdo->prepare("UPDATE channel SET maincategory = ?, subcategory = ? WHERE channelid = ?");
-			$stmt->bindValue(1, $params['maincategory']);
-			$stmt->bindValue(2, $params['subcategory']);
-			$stmt->bindValue(3, $params['channelid']);
+			$stmt = $pdo->prepare("UPDATE channel SET main_category = ?, sub_category = ? WHERE channel_id = ?");
+			$stmt->bindValue(1, $params['main_category']);
+			$stmt->bindValue(2, $params['sub_category']);
+			$stmt->bindValue(3, $params['channel_id']);
 			$stmt->execute();
 		}
 		elseif($params['opType'] == 'add') {
-			$row_cont =  "(maincategory, subcategory, channelid ,channeltitle, viewcount, videocount,subscribercount,thumbnailurl,description,keywords,uploadsid, publishdate)";
-			$row_array = array('maincategory','subcategory','channelid','title','viewcount',
-			'videocount','subscribercount','thumbnail_url','description','keywords','uploads_id',
+			$row_cont =  "(main_category, sub_category, channel_id ,channel_title, view_count, video_count,subscriber_count,thumbnail_url,description,keywords,uploads_id, publish_date)";
+			$row_array = array('main_category','sub_category','channel_id','title','view_count',
+			'video_count','subscriber_count','thumbnail_url','description','keywords','uploads_id',
 			'publish_date');
 			$stmt = $pdo ->prepare("INSERT INTO channel $row_cont VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 			foreach ($row_array as $key => $value) {
