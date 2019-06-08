@@ -31,16 +31,6 @@ class Mgr extends React.Component {
 
   processData(allData) {
     var res = []
-    if(allData[0]['maincategory']) {
-      allData.forEach(data => {
-          if(res[data['maincategory']] === undefined)
-            res[data['maincategory']] = []
-          if(res[data['maincategory']][data['subcategory']] === undefined)
-            res[data['maincategory']][data['subcategory']] = []
-          res[data['maincategory']][data['subcategory']].push(data)
-      })
-    }
-
     if(allData[0]['main_category']) {
       allData.forEach(data => {
           if(res[data['main_category']] === undefined)
