@@ -6,6 +6,7 @@ const myappAddr = "api/api.php"
 const ytAddr = "https://www.googleapis.com/youtube/v3/"
 const apiKey = "AIzaSyD3R2gavNlItHEZWTt-_UOMEwFwMN5reiQ"
 const tableMap = {channelData: "channel", videoData: "video"}
+const uplistMap = {}
 
 var playerSet = false
 var tag = document.createElement('script');
@@ -395,6 +396,7 @@ class Mgr extends React.Component {
         })
 
         subcategoryArray.forEach(data => {
+          uplistMap[data.channel_id] = data.uploads_id
           channelTable.push(
             <div className="chan-box">
               <img src = {data['thumbnail_url']} />
@@ -437,6 +439,7 @@ class Mgr extends React.Component {
           return 0;
         })
         videos.forEach(data => {
+            const uploadsId = uplistMap[data['channel_id']]
             videoSubCont.push(
               <div className="video-box">
                 <a href={"https://www.youtube.com/watch?v=" + data['video_id']} target="_blank">
@@ -445,7 +448,9 @@ class Mgr extends React.Component {
                 <a href={"https://www.youtube.com/channel/" + data['channel_id']} target="_blank" title={data['channel_title']}>
                 <p>{data['channel_title']}</p></a>
                 <span> {data['view_count']+ " views  "}</span> <span>{data['published_at'].split("T")[0]}</span>
-                <span onClick={this.playVideo} id={data['video_id']}> play</span>
+                <span onClick={this.playVideo} id={data['video_id']}> play </span>
+                <a href={"https://nandaka.herokuapp.com/uplist_data.html#"+ uploadsId} target="_blank">
+                list</a>
               </div>)
         })
         videoCont.push(<div className="clearfix">{videoSubCont}</div>)
