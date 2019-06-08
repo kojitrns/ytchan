@@ -158,12 +158,12 @@ function show_footer() {
 	</footer>';
 }
 
-function sort_chan_rows(&$chan_rows, $sort_target) {
+function sort_rows(&$rows, $sort_target) {
 	$sort;
-	foreach ($chan_rows as $num => $row) {
+	foreach ($rows as $num => $row) {
 		$sort[$num] = $row[$sort_target];
 	}
-	array_multisort($sort, SORT_DESC, $chan_rows);
+	array_multisort($sort, SORT_DESC, $rows);
 }
 
 $category_list = array();
@@ -183,7 +183,7 @@ $sub_categories = $category_list[$cur_category];
 if($mode == 'channel')
 foreach ($sub_categories as $subcategory => $rows) {
 	echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
-	sort_chan_rows($rows, 'view_count');
+	sort_rows($rows, 'view_count');
 	foreach ($rows as $row) {
 		echo get_channel_cont($row);
 	}
@@ -192,6 +192,7 @@ foreach ($sub_categories as $subcategory => $rows) {
 else {
 	foreach ($sub_categories as $subcategory => $rows) {
 	echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
+	sort_rows($rows, 'published_at');
 	foreach ($rows as $row) {
 		echo get_video_cont($row);
 	}
