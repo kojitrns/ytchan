@@ -396,7 +396,6 @@ class Mgr extends React.Component {
         })
 
         subcategoryArray.forEach(data => {
-          uplistMap[data.channel_id] = data.uploads_id
           channelTable.push(
             <div className="chan-box">
               <img src = {data['thumbnail_url']} />
@@ -428,6 +427,11 @@ class Mgr extends React.Component {
       if(this.state.videoData[this.state.curCategory])
       subcategoryList.forEach(subcategory => {
         const videos = this.state.videoData[this.state.curCategory][subcategory]
+        const channels = this.state.channelData[this.state.curCategory][subcategory]
+        channels.forEach(data => {
+          uplistMap[data.channel_id] = data.uploads_id
+        })
+
         if(videos === undefined) return
         const videoSubCont = []
         videoSubCont.push(<h3 id={subcategory}>■{subcategory}</h3>)
