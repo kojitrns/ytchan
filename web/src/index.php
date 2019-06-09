@@ -2,7 +2,7 @@
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1" charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="description" content="YouTubeの様々なチャンネル（投稿者）をジャンル別にまとめています。各チャンネルの最新動画の情報も載せてます。" />
+	<meta name="description" content="YouTubeのチャンネル（投稿者）のまとめです。各チャンネルの最新の動画も載せてます。" />
 	<link rel="icon" href="https://img.icons8.com/nolan/64/000000/video-call.png" sizes="16x16" type="image/png" />
 	<?php
 	if($_SERVER['SERVER_NAME'] == 'localhost')
@@ -109,6 +109,7 @@ function show_header(&$category_list) {
 	echo '<header><div class="header-cont">
 	<img src="https://img.icons8.com/nolan/64/000000/video-call.png" width=40px height=40px><div class="site-title"><p>チャンネルずかん</p></div>';
 
+	echo '<div class="header-right">';
 	show_btns_on_header();
 
 	$mode_cont = '';
@@ -120,7 +121,7 @@ function show_header(&$category_list) {
 	      最近の動画</a>";
 	}
 	echo "<div class=\"mode-selector\">$mode_cont</div>";
-	echo '</div></header>';
+	echo '</div></div></header>';
 }
 
 function show_left_panel(&$category_list) {
@@ -147,17 +148,20 @@ function show_left_panel(&$category_list) {
 function show_right_panel()
 {
 	echo '<div class="right-panel">
-	<p>Youtubeのいろんなチャンネルをまとめてます。最近の動画はここ１週間でアップされたものです。ジャンルの分類、チャンネル追加など毎日更新。</p>
+	<p>Youtubeのいろんなチャンネルをまとめてます。最近の動画はここ１週間でアップされたものです。</p>
 	</div>';
 }
 
 function show_btns_on_header() {
-	echo '<a href="https://www.youtube.com/" target=_blank title="Youtube"><img src="https://img.icons8.com/windows/32/000000/youtube.png" class="yt-btn"></a>';
+
+	echo '<div class="header-btns"><a href="https://www.youtube.com/" target=_blank title="Youtube"><img src="https://img.icons8.com/windows/32/000000/youtube.png" class="yt-btn"></a>';
 
 	global $cur_category;
-	$text = "Youtube チャンネルずかん カテゴリ：$cur_category\"";
+	$text = "Youtube チャンネルずかん カテゴリ：$cur_category";
 	$url = "https://ytchan.herokuapp.com". urlencode($_SERVER['REQUEST_URI']);
-	echo '<span class="tw-btn"><a href="https://twitter.com/share?url='. $url  .'&text=' .$text. ' class="twitter-share-button" data-show-count="false">Tweet</a></span><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
+	echo '<a href="https://twitter.com/share?url='. $url  .'&text=' .$text.'
+	&hashtags=Youtube,'.$cur_category.'" target="_blank">
+	<img src="https://img.icons8.com/color/48/000000/twitter.png" class="tw-btn" width=30 height=30></a></div>';
 }
 
 function show_footer() {

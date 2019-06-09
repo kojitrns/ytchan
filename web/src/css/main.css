@@ -44,6 +44,30 @@ header img {
 	margin: 0;
 }
 
+.header-right {
+	float: right;
+}
+
+.header-btns {
+	margin-top: 0.7rem;
+	float: left;
+	margin-right: 0.8rem;
+}
+
+.yt-btn {
+}
+
+.tw-btn {
+	margin-top: 0.2rem;
+	/*margin-right: 1rem;*/
+	margin-left: 0.2rem;
+}
+
+.mode-selector {
+	float: left;
+	margin-top: 1rem;
+}
+
 .left-panel{
 	width: 8%;
 	height: 66%;
@@ -76,21 +100,11 @@ header img {
 }
 
 .right-panel {
-	width: 9%;
+	width: 10%;
+	margin-top: 2rem;
 	margin-right: 1px;
 	float: left;
-}
-
-.yt-btn {
-	margin-top: 0.4rem;
-	margin-left: 59%;
-	float: left;
-}
-
-.tw-btn {
-	float: left;
-	margin-top: 0.9rem;
-	margin-right: 1rem;
+	font-size: 14px;
 }
 
 main {
@@ -103,12 +117,6 @@ main {
 
 .main-category-panel h2{
 	margin-top: 3rem;
-}
-
-.mode-selector {
-	float: right;
-	margin-top: 1rem;
-	margin-right: 1rem;
 }
 
 .subcategory-zone {
