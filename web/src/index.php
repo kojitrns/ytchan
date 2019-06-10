@@ -129,20 +129,22 @@ function show_left_panel(&$category_list) {
 	$main_categories = array();
 	foreach ($category_list as $maincategory => $subc) {
 		$main_categories[] = $maincategory;
-		// echo "<a href=\"{$_SERVER["SCRIPT_NAME"]}?cur_category=$maincategory&mode=$mode\">$maincategory</a> ";
 	}
 	sort($main_categories);
 
 	$sub_categories = array_keys($category_list[$cur_category]);
 
 	echo '<div class="left-panel"><p>カテゴリ</p><div class="category-zone">';
+	echo "<ul>$cur_category";
 	foreach ($sub_categories as $sub_category) {
-		echo "<a href=\"#$sub_category\">・$sub_category</a></br>";
+		echo "<li><a href=\"#$sub_category\">・$sub_category</a></li>";
 	}
+	echo '</ul><div class="other-category">';
 	foreach ($main_categories as $maincategory) {
-		echo "<a href=\"/$maincategory/$mode\">$maincategory</a></br>";
+		if($maincategory != $cur_category)
+			echo "<a href=\"/$maincategory/$mode\">・$maincategory</a></br>";
 	}
-	echo '</div></div>';
+	echo '</div></div></div>';
 }
 
 function show_right_panel()

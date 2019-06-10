@@ -99,6 +99,28 @@ header img {
 	background-color: #D3DCE2;
 }
 
+.left-panel a {
+	text-decoration: none;
+}
+
+.left-panel ul {
+	margin-top: 5px;
+	margin-left: 5px;
+	list-style-type: none;
+	padding: 0;
+}
+
+.left-panel li{
+	margin-top: 1px;
+	margin-left: 2px;
+	/*border-left: 1px solid #3972b2;*/
+	/*border-top: 1px solid #3972b2;*/
+}
+
+.left-panel .other-category {
+	margin-left: 2px;
+}
+
 .right-panel {
 	width: 10%;
 	margin-top: 2rem;
