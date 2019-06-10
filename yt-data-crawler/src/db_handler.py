@@ -45,11 +45,11 @@ def video_record_gen(video_data, main_category, sub_category):
 		like_count, thumbnail, description, published_at)
 
 def print_channel_row(channel_id,table_name, cur):
-	cur.execute('SELECT * FROM channel WHERE channelid = %s', (channel_id,))
+	cur.execute('SELECT * FROM channel WHERE channel_id = %s', (channel_id,))
 	print(cur.fetchone()[3])
 
 def get_channel_from_id(channel_id, cur):
-	cur.execute('SELECT * FROM channel WHERE channelid = %s', (channel_id,))
+	cur.execute('SELECT * FROM channel WHERE channel_id = %s', (channel_id,))
 	return cur.fetchall()
 
 def get_video_from_id(video_id, cur):
@@ -57,13 +57,13 @@ def get_video_from_id(video_id, cur):
 	return cur.fetchall()
 
 def delete_channel(channel_id, cur):
-	cur.execute('DELETE FROM channel WHERE channelid = %s', (channel_id,))
+	cur.execute('DELETE FROM channel WHERE channel_id = %s', (channel_id,))
 
 def delete_video(channel_id, cur):
 	cur.execute('DELETE FROM video WHERE channel_id = %s', (channel_id,))
 
 def is_exist_channel(channel_id, cur):
-	cur.execute('SELECT EXISTS(SELECT * FROM channel WHERE channelid = %s)', (channel_id,))
+	cur.execute('SELECT EXISTS(SELECT * FROM channel WHERE channel_id = %s)', (channel_id,))
 	return cur.fetchone()[0]
 
 def add_data(records, table_name):
