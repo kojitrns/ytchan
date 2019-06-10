@@ -223,9 +223,3 @@ select {
 .nav-link {
 	padding: 0.1rem 0.5rem;
 }
-
-.mode-selector {
-	float: right;
-	margin-right: 1rem;
-	margin: 0.8rem;
-}

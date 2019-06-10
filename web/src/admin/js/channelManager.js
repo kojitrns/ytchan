@@ -472,14 +472,15 @@ class Mgr extends React.Component {
         <div className="left-panel">{leftPanelCont}</div>
         <div className="main-category-panel">
         <center><p><div id="player"></div></p></center>
-          <p><label onClick={this.onChangeMode.bind(this, "search")}>検索:</label><input type="text" name="search" onKeyPress={this.handleKeyPress} /></p>
-          {mainCont}
+        <p>
+          <span onClick={this.onChangeMode}>チャンネル/動画/</span>
+          <label onClick={this.onChangeMode.bind(this, "search")}>検索:</label>
+          <input type="text" name="search" onKeyPress={this.handleKeyPress} />
+        </p>
+        {mainCont}
         </div>
         <div className="controlPanel">
           <center>
-            <div className="mode-selector">
-              <span onClick={this.onChangeMode}>チャンネル/動画</span>
-            </div>
             <button onClick={this.deleteChannel}>Delete</button>
             <button onClick={this.fetchData.bind(this, dataName)}>Update</button>
             <p><select size="10" name="mainCategory" value={this.state.selectedCategory} onChange={this.onChangeCategorySelector}>{categorySelectorCont}</select></p>
