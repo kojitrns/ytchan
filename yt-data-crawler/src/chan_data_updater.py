@@ -1,13 +1,15 @@
 # coding: utf-8
 import pprint
+import sys
+import urllib
 import db_handler as db
 import api_handler as ytapi
+from twitter import tw_handler as tw
 
 ROW_CONTENTS = ['main_category','sub_category','channel_id','title','viewCount','videoCount','subscriberCount',
 'thumbnail_url','description','keywords','uploads_id', 'publishe_date']
 
 dup_list = []
-
 # def init():
 
 def update_channel_data(conn, cur, channel_id):
@@ -23,12 +25,12 @@ def update_channel_data(conn, cur, channel_id):
 		return
 
 	for old_data in channels:
-		row = [db.chan_record_gen(chan_data, old_data['maincategory'], old_data['subcategory'])]
+		row = [db.chan_record_gen(chan_data, old_data['main_category'], old_data['sub_category'])]
 		db.add_data_with_conn(row, 'channel', conn, cur)
 
 
 def is_valid_channel(chan_data):
-	return chan_data['viewcount'] > 0
+	return chan_data['view_count'] > 0
 
 # init()
 
@@ -36,14 +38,26 @@ with db.get_connection() as conn:
 	with conn.cursor(cursor_factory = db.psycopg2.extras.DictCursor) as cur:
 		cur.execute('SELECT * FROM channel')
 		rows = cur.fetchall()
+		chan_sums = {}
 		for (id, row) in enumerate(rows):
 			if is_valid_channel(row):
-				if not row['channelid'] in dup_list:
+				if row['main_category'] in chan_sums:
+					chan_sums[row['main_category']] += 1
+				else :
+					chan_sums[row['main_category']] = 1
+
+				if not row['channel_id'] in dup_list:
 					print("ok")
-					update_channel_data(conn,cur,row['channelid'])
+					update_channel_data(conn,cur,row['channel_id'])
 				else :
 					print("already updated")
 			else:
-				db.delete_channel(row['channelid'], cur)
+				db.delete_channel(row['channel_id'], cur)
 				print("delete")
-			print("%d %s %s %s" % (id, row['channeltitle'],row['maincategory'],row['subcategory']))
+			print("%d %s %s %s" % (id, row['channel_title'],row['main_category'],row['sub_category']))
+
+			tw_text = 'データを更新しました。 カテゴリ->{}  チャンネル数->{} https://ytchan.herokuapp.com/{}/channel #Youtube #{}'
+		for category, value in chan_sums.items():
+			url_param = urllib.urlencode({'q' : category})
+			tw.tweet(cur, tw_text.format(category, value ,url_param[2:], category))
+			print("%s %d" % (category, value))
