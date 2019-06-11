@@ -5,29 +5,7 @@ import urllib
 import db_handler as db
 import api_handler as ytapi
 from twitter import tw_handler as tw
-
-ROW_CONTENTS = ['main_category','sub_category','channel_id','title','viewCount','videoCount','subscriberCount',
-'thumbnail_url','description','keywords','uploads_id', 'publishe_date']
-
 dup_list = []
-# def init():
-
-def update_channel_data(conn, cur, channel_id):
-	channels = db.get_channel_from_id(channel_id, cur)
-	if len(channels) > 1:
-		dup_list.append(channel_id)
-		
-	db.delete_channel(channel_id, cur)
-
-	chan_data = ytapi.get_channel_data(channel_id, 2)
-	if chan_data is None:
-		print("Cound not get chan data")
-		return
-
-	for old_data in channels:
-		row = [db.chan_record_gen(chan_data, old_data['main_category'], old_data['sub_category'])]
-		db.add_data_with_conn(row, 'channel', conn, cur)
-
 
 def is_valid_channel(chan_data):
 	return chan_data['view_count'] > 0
@@ -46,7 +24,6 @@ with db.get_connection() as conn:
 
 				if not row['channel_id'] in dup_list:
 					chan_sums[row['main_category']] += 1
-					# update_channel_data(conn,cur,row['channel_id'])
 				else :
 					print("already updated")
 			else:
