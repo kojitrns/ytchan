@@ -46,11 +46,16 @@ def tweet_mul(cur, texts):
 		else:
 		    print("Failed. : %d"% res.status_code)
 		    while res.status_code != 200:
-				time.sleep(30)
-				res = twitter.post(url, params = params)
+			    time.sleep(30)
+			    res = twitter.post(url, params = params)
 		    print("%s %s" % (text, "Success."))
+		time.sleep(7)
 
-		time.sleep(6)
+def get_limit(cur):
+	twitter = get_tw_session(cur)
+	url = "https://api.twitter.com/1.1/statuses/update.json"
+	res = twitter.get(url)
+	pprint.pprint(res.headers)
 
 def get_tweets(cur, usr_id, number):
 	twitter = get_tw_session()

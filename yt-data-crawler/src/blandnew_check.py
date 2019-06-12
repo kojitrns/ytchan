@@ -13,36 +13,22 @@ ROW_CONTENTS = ['main_category','sub_category','channel_id','title','viewCount',
 
 # def init():
 
-def update_video_data(conn, cur, channel_id, uplist_id, main_category, sub_category):
+def bland_new_check(conn, cur, channel_id, uplist_id, main_category, sub_category):
 	old = db.get_video_from_channel_id(channel_id, cur)
 	old_vid = None
-	if old is not None:
-		old_vid = old['video_id']
+	if old is None:
+		return False
 
-	db.delete_video(channel_id, cur)
-	video_data = ytapi.get_latest_video_data(uplist_id, 2)
+	if check_pubulish_date(old['published_at'], 2):
+		return old['video_id']
 
-	if video_data is None:
-		print("Cound not get video data")
-		return
+	return False
 
-	if check_pubulish_date(video_data['snippet']['publishedAt'], 1):
-		print("get new video")
-		ret = {'vid' : None}
-		if old_vid is None or old_vid != video_data['id']:
-			ret['vid'] = video_data['id']
-			print("bland new")
-
-		row = [db.video_record_gen(video_data, main_category, sub_category)]
-		db.add_data_with_conn(row, 'video', conn, cur)
-		return ret
-
-	return None
-
-def check_pubulish_date(published_date, span):
+def check_pubulish_date(published_date, span_dasy):
+	print(published_date)
 	date = published_date.split('T')[0].split('-')
 	published_date = datetime.date(int(date[0]),int(date[1]),int(date[2]))
-	deadline = datetime.date.today() - datetime.timedelta(weeks = span)
+	deadline = datetime.date.today() - datetime.timedelta(days = span_dasy)
 	return deadline < published_date
 
 # init()
@@ -65,26 +51,15 @@ with db.get_connection() as conn:
 		cur.execute('SELECT * FROM channel')
 		rows = cur.fetchall()
 		for (id, row) in enumerate(rows):
-			print(row['channel_title'])
-			ret = update_video_data(conn, cur, row['channel_id'], row['uploads_id'],
+				print(row['channel_title'])
+				ret = bland_new_check(conn, cur, row['channel_id'], row['uploads_id'],
 				row['main_category'], row['sub_category'])
-			if ret is not None:
-				if row['main_category'] in video_sums:
-					video_sums[row['main_category']] += 1
-				else :
-					video_sums[row['main_category']] = 0
-				if ret['vid'] is not None:
-					bland_news += 1
-					new_video_info.append({'video_id': ret['vid'],
+				if ret :
+					new_video_info.append({'video_id': ret,
 					'channel_title': row['channel_title'], 'category': row['main_category'] })
-			print("")
+				print("")
 		tweets = []
-		tw_new_video = '{}さんの新しい動画。  https://www.youtube.com/watch?v={} https://ytchan.herokuapp.com/{}/video #{}'
-		tw_text = '最近の動画を更新しました。 カテゴリ->{}  動画数->{} https://ytchan.herokuapp.com/{}/video #Youtube #{}'
-		for category, value in video_sums.items():
-			category_encoded = urllib.parse.urlencode({'q' : category})[2:]
-			tweets.append(tw_text.format(category, value ,category_encoded, category))
-			print("%s %d" % (category, value))
+		tw_new_video = '{}さんの新しい動画。https://www.youtube.com/watch?v={} https://ytchan.herokuapp.com/{}/video #{}'
 
 		print(bland_news)
 		for video in new_video_info:
