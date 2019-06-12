@@ -45,7 +45,7 @@ def tweet_mul(cur, texts):
 		    print("%s %s" % (text, "Success."))
 		else:
 		    print("Failed. : %d"% res.status_code)
-		time.sleep(3)
+		time.sleep(6)
 
 def get_tweets(cur, usr_id, number):
 	twitter = get_tw_session()

@@ -52,9 +52,9 @@ def get_channel_from_id(channel_id, cur):
 	cur.execute('SELECT * FROM channel WHERE channel_id = %s', (channel_id,))
 	return cur.fetchall()
 
-def get_video_from_id(video_id, cur):
-	cur.execute('SELECT * FROM video WHERE video_id = %s', (video_id,))
-	return cur.fetchall()
+def get_video_from_channel_id(channel_id, cur):
+	cur.execute('SELECT * FROM video WHERE channel_id = %s', (channel_id,))
+	return cur.fetchone()
 
 def delete_channel(channel_id, cur):
 	cur.execute('DELETE FROM channel WHERE channel_id = %s', (channel_id,))
