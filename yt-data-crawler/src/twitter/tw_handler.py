@@ -44,12 +44,12 @@ def tweet_mul(cur, texts):
 		if res.status_code == 200:
 		    print("%s %s" % (text, "Success."))
 		else:
-		    print("Failed. : %d"% res.status_code)
 		    while res.status_code != 200:
-			    time.sleep(30)
+			    print("Failed. : %d"% res.status_code)
+			    time.sleep(500)
 			    res = twitter.post(url, params = params)
 		    print("%s %s" % (text, "Success."))
-		time.sleep(7)
+		time.sleep(300)
 
 def get_limit(cur):
 	twitter = get_tw_session(cur)

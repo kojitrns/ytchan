@@ -61,7 +61,10 @@ with db.get_connection() as conn:
 
 		video_sums = {}
 		new_video_info = []
+		visited_category = []
 		bland_news = 0
+
+
 		cur.execute('SELECT * FROM channel')
 		rows = cur.fetchall()
 		for (id, row) in enumerate(rows):
@@ -75,18 +78,21 @@ with db.get_connection() as conn:
 					video_sums[row['main_category']] = 0
 				if ret['vid'] is not None:
 					bland_news += 1
-					new_video_info.append({'video_id': ret['vid'],
-					'channel_title': row['channel_title'], 'category': row['main_category'] })
+					if row['main_category'] not in visited_category:
+						visited_category.append(row['main_category'])
+						new_video_info.append({'video_id': ret['vid'],
+					'channel_title': row['channel_title'], 'category': row['sub_category'] })
 			print("")
 		tweets = []
 		tw_new_video = '{}さんの新しい動画。  https://www.youtube.com/watch?v={} https://ytchan.herokuapp.com/{}/video #{}'
-		tw_text = '最近の動画を更新しました。 カテゴリ->{}  動画数->{} https://ytchan.herokuapp.com/{}/video #Youtube #{}'
+		tw_text = '最近の動画を更新しました。 動画数::{} https://ytchan.herokuapp.com #Youtube '
 		for category, value in video_sums.items():
-			category_encoded = urllib.parse.urlencode({'q' : category})[2:]
-			tweets.append(tw_text.format(category, value ,category_encoded, category))
 			print("%s %d" % (category, value))
 
+		tweets.append(tw_text.format(bland_news))
+
 		print(bland_news)
+		print(len(new_video_info))
 		for video in new_video_info:
 			print("bland new chan %s %s %s" % (video['channel_title'], video['video_id'], video['category']))
 		for video in new_video_info:
