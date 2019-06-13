@@ -55,9 +55,6 @@ with db.get_connection() as conn:
 			print("%d %s %s %s" % (id, row['channel_title'],row['main_category'],row['sub_category']))
 
 		tweets = []
-		tw_text = 'データを更新しました。 カテゴリ->{}  チャンネル数->{} https://ytchan.herokuapp.com/{}/channel #Youtube #{}'
-		for category, value in chan_sums.items():
-			url_param = urllib.parse.urlencode({'q' : category})
-			tweets.append(tw_text.format(category, value ,url_param[2:], category))
-			print("%s %d" % (category, value))
+		tw_text = 'データを更新しました。チャンネル数->{} #Youtube'
+		tweets.append(tw_text.format(value))
 		tw.tweet_mul(cur, tweets)
