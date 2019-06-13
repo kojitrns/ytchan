@@ -271,6 +271,10 @@ main {
 	justify-content: center;
 }
 
+.ytp {
+	margin-bottom: 2.5rem;
+}
+
 .video-box {
 	margin-left: 2rem;
 	margin-bottom: 4rem;
@@ -297,6 +301,16 @@ main {
 
 .video-box img {
 	width: 100%;
+}
+
+.play-btn {
+	color: red;
+}
+
+.play-btn:hover {
+	font-weight: bold;
+	cursor: pointer;
+	cursor: hand;
 }
 
 footer {

@@ -18,6 +18,9 @@
 	  gtag('js', new Date());
 	  gtag('config', 'UA-141605464-1');
 	</script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="../js/ytplayer.js"></script>
     <title>チャンネルずかん</title>
 </head>
 <body>
@@ -86,6 +89,7 @@ function get_video_cont($video_data=null)
       <a href=\"https://www.youtube.com/channel/{$video_data['channel_id']}\" target=\"_blank\" title=\"{$video_data['channel_title']}\">
       <p>{$video_data['channel_title']}</p></a>
       <span> $view_count views</span> <span>$pub_data</span>
+      <span class=\"play-btn\"><span id={$video_data['video_id']} onclick=\"playVideo()\" title=\"再生\">play</span></span>
     </div>";
 }
 
@@ -205,11 +209,13 @@ if($mode == 'channel') {
 	}
 }
 else {
+	echo '<center><div class="ytp"><div id="player"></div></div></center>';
 	foreach ($sub_categories as $subcategory => $rows) {
 		echo "<div class=\"subcategory-zone\"><h3 id=\"$subcategory\">■$subcategory</h3>";
 		sort_rows($rows, 'published_at');
 		foreach ($rows as $row) {
 			echo get_video_cont($row);
+			echo "<script>videoIds.push('{$row['video_id']}')</script>";
 		}
 		echo '</div>';
 	}
