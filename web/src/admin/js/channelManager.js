@@ -118,6 +118,7 @@ class Mgr extends React.Component {
       sendData.publish_date = chanData.snippet.publishedAt
       this.callApi(sendData)
     }
+
     if(this.state.visibleCont === 'searchResult') {
       this.state.searchResult.forEach(chanData => {
         if(this.state.selectedChannelIds.includes(chanData.id))
@@ -286,11 +287,14 @@ class Mgr extends React.Component {
                 <p>{channel.statistics.subscriberCount}</p>
               </div>
               <div className="detail-box">
+                <span className="description">
                 <img id="desc-img" src="https://img.icons8.com/ios/50/000000/questions.png" />
-                <p>{channel.snippet.description}</p>
+                <p>{channel.snippet.description}</p></span>
                 <a href={"https://socialblade.com/youtube/channel/" + channel.id} target="_blank" title="socialblade">
                 <img id="sb-img" src ="../img/sb.png"/>
                 </a>
+                <a href={"https://nandaka.herokuapp.com/uplist_data.html#"+channel.contentDetails.relatedPlaylists.uploads} target="_blank">
+                <img id="uplist-img" src ="https://ytchan.herokuapp.com/img/videos.png"/></a>
               </div>
             </div>
             <div className = {this.state.selectedChannelIds.includes(channel.id) ? "selected-title-box":"chan-title-box"}>
@@ -404,8 +408,9 @@ class Mgr extends React.Component {
                   <p>{data['view_count']}</p><p>{data['video_count']}</p><p>{data['subscriber_count']}</p>
                 </div>
                 <div className="detail-box">
+                  <span className="description">
                   <img id="desc-img" src="https://img.icons8.com/ios/50/000000/questions.png" />
-                  <p>{data['description']}</p>
+                  <p>{data['description']}</p></span>
                   <a href={"https://socialblade.com/youtube/channel/" + data['channel_id']} target="_blank" title="socialblade">
                   <img id="sb-img" src ="../img/sb.png"/>
                   </a>

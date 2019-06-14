@@ -44,10 +44,16 @@ def tweet_mul(cur, texts):
 		if res.status_code == 200:
 		    print("%s %s" % (text, "Success."))
 		else:
+		    try_count = 0
 		    while res.status_code != 200:
 			    print("Failed. : %d"% res.status_code)
-			    time.sleep(500)
+			    time.sleep(300)
 			    res = twitter.post(url, params = params)
+			    try_count += 1
+			    if try_count == 2:
+			        break
+		    if try_count == 2:
+				continue
 		    print("%s %s" % (text, "Success."))
 		time.sleep(300)
 
