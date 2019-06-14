@@ -53,7 +53,7 @@ def tweet_mul(cur, texts):
 			    if try_count == 2:
 			        break
 		    if try_count == 2:
-				continue
+		        continue
 		    print("%s %s" % (text, "Success."))
 		time.sleep(300)
 
