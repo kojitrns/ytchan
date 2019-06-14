@@ -414,6 +414,8 @@ class Mgr extends React.Component {
                   <a href={"https://socialblade.com/youtube/channel/" + data['channel_id']} target="_blank" title="socialblade">
                   <img id="sb-img" src ="../img/sb.png"/>
                   </a>
+                  <a href={"https://nandaka.herokuapp.com/uplist_data.html#"+data['uploads_id']} target="_blank">
+                <img id="uplist-img" src ="https://ytchan.herokuapp.com/img/videos.png"/></a>
                 </div>
               </div>
               <div className = {this.state.selectedChannelIds.includes(data['channel_id']) ? "selected-title-box":"chan-title-box"}>
