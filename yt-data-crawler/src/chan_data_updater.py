@@ -54,7 +54,5 @@ with db.get_connection() as conn:
 				print("delete")
 			print("%d %s %s %s" % (id, row['channel_title'],row['main_category'],row['sub_category']))
 
-		tweets = []
 		tw_text = 'データを更新しました。チャンネル数->{} #Youtube'
-		tweets.append(tw_text.format(value))
-		tw.tweet_mul(cur, tweets)
+		tw.tweet(cur, tw_text.format(value))
