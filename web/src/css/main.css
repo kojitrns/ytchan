@@ -130,6 +130,15 @@ header img {
 	font-size: 14px;
 }
 
+.form-area {
+	margin-top: 1rem;
+}
+
+#message {
+	width: 9rem;
+	height: 14rem;
+}
+
 main {
 	width: 78%;
 	padding-top: 10px;

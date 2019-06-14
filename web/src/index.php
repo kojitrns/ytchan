@@ -1,3 +1,9 @@
+<?php
+	if(isset($_POST['category'])){
+		include("msg_handler.php");
+		exit();
+	}
+?>
 <html>
 <head>
 	<meta name="viewport" content="width=device-width,initial-scale=1" charset="UTF-8">
@@ -153,9 +159,18 @@ function show_left_panel(&$category_list) {
 
 function show_right_panel()
 {
+	global $cur_category, $mode;
 	echo '<div class="right-panel">
 	<p>Youtubeのいろんなチャンネルをまとめてます。最近の動画はここ１週間でアップされたものです。</p>
-	</div>';
+	<form class="form-area" action="/message" accept-charset="UTF-8" method="post">
+	<textarea name="message" id="message" placeholder="サイトについてのご意見ご感想はこちらにどうぞ。">
+	</textarea>
+	<center>
+	<input type="hidden" name="category" value="'.$cur_category.'" />
+	<input type="hidden" name="mode" value="'.$mode.'" />
+	<input type="submit" name="commit" value="送信する" class="sbmt" data-disable-with="送信する" />
+	</center>
+	</form></div>';
 }
 
 function show_btns_on_header() {

@@ -7,9 +7,9 @@ var ytPlayer = null
 var videoIds = []
 
 const playVideo = function() {
-  console.log("playVideo")
   const videoId = event.target.id
   var cur = videoIds.findIndex( (id) => {return id===videoId});
+  console.log("playVideo", videoId)
 
   $('body, html').scrollTop(0);
   if(!playerSet){
