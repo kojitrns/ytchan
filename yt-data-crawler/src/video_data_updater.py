@@ -59,11 +59,13 @@ with db.get_connection() as conn:
 				row['main_category'], row['sub_category'])
 			exit()
 
+		if not db.check_should_update(conn,cur):
+			exit()
+
 		video_sums = {}
 		new_video_info = []
 		visited_category = []
 		bland_news = 0
-
 
 		cur.execute('SELECT * FROM channel')
 		rows = cur.fetchall()

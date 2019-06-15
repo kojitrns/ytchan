@@ -1,5 +1,6 @@
 import os
 import pprint
+import datetime
 import psycopg2
 from psycopg2  import extras
 
@@ -44,6 +45,18 @@ def video_record_gen(video_data, main_category, sub_category):
 	return (main_category, sub_category, channel_id, channel_title, video_id, video_title, view_count,
 		like_count, thumbnail, description, published_at)
 
+def check_should_update(conn,cur):
+	cur.execute('SELECT * FROM update_info')
+	row = cur.fetchone()
+	count = 0
+	if row is not None:
+		count = int(row['count'])
+	cur.execute('DELETE FROM update_info')
+	date = datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")
+	cur.execute('INSERT INTO update_info VALUES (%s, %s)', (date, str(count + 1)))
+	conn.commit()
+	return count%4 == 0
+
 def print_channel_row(channel_id,table_name, cur):
 	cur.execute('SELECT * FROM channel WHERE channel_id = %s', (channel_id,))
 	print(cur.fetchone()[3])
@@ -69,7 +82,7 @@ def is_exist_channel(channel_id, cur):
 def add_data(records, table_name):
 	with get_connection() as conn:
 		with conn.cursor() as cur:
-			extras.execute_values(cur, 'INSERT INTO  ' + table_name + ' VALUES %s', records)
+			extras.execute_values(cur, 'INSERT INTO ' + table_name + ' VALUES %s', records)
 			conn.commit()
 
 def add_data_with_conn(records, table_name, conn, cur):
