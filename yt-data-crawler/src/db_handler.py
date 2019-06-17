@@ -45,17 +45,17 @@ def video_record_gen(video_data, main_category, sub_category):
 	return (main_category, sub_category, channel_id, channel_title, video_id, video_title, view_count,
 		like_count, thumbnail, description, published_at)
 
-def check_should_update(conn,cur):
-	cur.execute('SELECT * FROM update_info')
+def check_should_update(conn, cur, mod, name):
+	cur.execute('SELECT * FROM update_info WHERE name = %s', (name,))
 	row = cur.fetchone()
 	count = 0
 	if row is not None:
 		count = int(row['count'])
-	cur.execute('DELETE FROM update_info')
+	cur.execute('DELETE FROM update_info  WHERE name = %s', (name,))
 	date = datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")
-	cur.execute('INSERT INTO update_info VALUES (%s, %s)', (date, str(count + 1)))
+	cur.execute('INSERT INTO update_info VALUES (%s, %s, %s)', (date, str(count + 1), name))
 	conn.commit()
-	return count%4 == 0
+	return count%mod == 0
 
 def print_channel_row(channel_id,table_name, cur):
 	cur.execute('SELECT * FROM channel WHERE channel_id = %s', (channel_id,))

@@ -23,15 +23,14 @@ def update_video_data(conn, cur, channel_id, uplist_id, main_category, sub_categ
 	video_data = ytapi.get_latest_video_data(uplist_id, 2)
 
 	if video_data is None:
-		print("Cound not get video data")
+		print("Cound not get video data %s" % (channel_id))
 		return
 
 	if check_pubulish_date(video_data['snippet']['publishedAt'], 1):
-		print("get new video")
 		ret = {'vid' : None}
 		if old_vid is None or old_vid != video_data['id']:
 			ret['vid'] = video_data['id']
-			print("bland new")
+			print("blandNew %s" % (video_data['snippet']['channelTitle']))
 
 		row = [db.video_record_gen(video_data, main_category, sub_category)]
 		db.add_data_with_conn(row, 'video', conn, cur)
@@ -59,7 +58,7 @@ with db.get_connection() as conn:
 				row['main_category'], row['sub_category'])
 			exit()
 
-		if not db.check_should_update(conn,cur):
+		if not db.check_should_update(conn,cur,4,'video_updater'):
 			exit()
 
 		video_sums = {}
@@ -70,7 +69,6 @@ with db.get_connection() as conn:
 		cur.execute('SELECT * FROM channel')
 		rows = cur.fetchall()
 		for (id, row) in enumerate(rows):
-			print(row['channel_title'])
 			ret = update_video_data(conn, cur, row['channel_id'], row['uploads_id'],
 				row['main_category'], row['sub_category'])
 			if ret is not None:
@@ -80,9 +78,8 @@ with db.get_connection() as conn:
 					video_sums[row['main_category']] = 0
 				if ret['vid'] is not None:
 					bland_news += 1
-			print("")
+
 		tweets = []
-		tw_new_video = '{}さんの新しい動画。  https://www.youtube.com/watch?v={} https://ytchan.herokuapp.com/{}/video #{}'
 		tw_text = '最近の動画を更新しました。 新着動画{}本 https://ytchan.herokuapp.com #Youtube '
 		for category, value in video_sums.items():
 			print("%s %d" % (category, value))

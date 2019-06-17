@@ -86,7 +86,7 @@ function get_channel_cont($chan_data=null)
 function get_video_cont($video_data=null)
 {
 	$pub_data = preg_split("/[T]/", $video_data['published_at'])[0];
-	$view_count = $video_data['view_count']+ " views  ";
+	$view_count = $video_data['view_count']." views  ";
     return 
     "<div class=\"video-box\">
       <a href=\"https://www.youtube.com/watch?v={$video_data['video_id']}\" target=\"_blank\" title={$video_data['video_title']}>
