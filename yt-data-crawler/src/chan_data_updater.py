@@ -46,13 +46,17 @@ with db.get_connection() as conn:
 
 				if not row['channel_id'] in dup_list:
 					chan_sums[row['main_category']] += 1
-					# update_channel_data(conn,cur,row['channel_id'])
+					update_channel_data(conn,cur,row['channel_id'])
 				else :
 					print("already updated")
 			else:
 				db.delete_channel(row['channel_id'], cur)
 				print("delete")
 			print("%d %s %s %s" % (id, row['channel_title'],row['main_category'],row['sub_category']))
+		chan_sums_total = 0
+		for category, value in chan_sums.items():
+			chan_sums_total += value
+			print("%s %d" % (category, value))
 
 		tw_text = 'データを更新しました。チャンネル数->{} #Youtube'
-		tw.tweet(cur, tw_text.format(value))
+		tw.tweet(cur, tw_text.format(chan_sums_total))

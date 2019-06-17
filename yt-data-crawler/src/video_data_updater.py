@@ -83,7 +83,7 @@ with db.get_connection() as conn:
 			print("")
 		tweets = []
 		tw_new_video = '{}さんの新しい動画。  https://www.youtube.com/watch?v={} https://ytchan.herokuapp.com/{}/video #{}'
-		tw_text = '最近の動画を更新しました。 動画数::{} https://ytchan.herokuapp.com #Youtube '
+		tw_text = '最近の動画を更新しました。 新着動画{}本 https://ytchan.herokuapp.com #Youtube '
 		for category, value in video_sums.items():
 			print("%s %d" % (category, value))
 		print(bland_news)
