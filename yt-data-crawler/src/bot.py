@@ -7,9 +7,6 @@ from twitter import tw_handler as tw
 
 with db.get_connection() as conn:
 	with conn.cursor(cursor_factory = db.psycopg2.extras.DictCursor) as cur:
-		if not db.check_should_update(conn,cur,3,'video_bot'):
-			exit()
-
 		cur.execute('SELECT * FROM video')
 		rows = cur.fetchall()
 		row = rows[random.randrange(len(rows)-1)]
