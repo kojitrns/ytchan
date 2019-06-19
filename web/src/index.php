@@ -94,7 +94,7 @@ function get_video_cont($video_data=null)
       <p>{$video_data['video_title']}</p></a>
       <a href=\"https://www.youtube.com/channel/{$video_data['channel_id']}\" target=\"_blank\" title=\"{$video_data['channel_title']}\">
       <p>{$video_data['channel_title']}</p></a>
-      <span> $view_count views</span> <span>$pub_data</span>
+      <span> $view_count</span> <span>$pub_data</span>
       <span class=\"play-btn\"><span id={$video_data['video_id']} onclick=\"playVideo()\" title=\"再生\">play</span></span>
     </div>";
 }
