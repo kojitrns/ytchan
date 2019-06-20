@@ -35,6 +35,7 @@
 $youtube_url = 'https://www.youtube.com/channel/';
 $mode = 'channel';
 $cur_category = 'ニュース';
+$last_update = '';
 
 $para = preg_split("/[\/]/", $_SERVER['REQUEST_URI']);
 if(count($para) > 2) {
@@ -99,14 +100,19 @@ function get_video_cont($video_data=null)
     </div>";
 }
 
-function set_channel_database(&$category_list, $table_name)
+function set_database(&$category_list, $table_name)
 {
+	global $last_update;
 	try {
 		$dbopts = parse_url(getenv('DATABASE_URL'));
 		$pdo = new PDO('pgsql:host='.$dbopts["host"].'; dbname='.ltrim($dbopts["path"],'/'), $dbopts["user"], $dbopts["pass"]);
 		//var_dump("connection succeeded\n");
-		foreach($pdo->query("SELECT * from $table_name") as $row) {
+		foreach($pdo->query("SELECT * FROM $table_name") as $row) {
 			$category_list[$row['main_category']][$row['sub_category']][] = $row;
+	    }
+	    $name = $table_name == 'channel' ? 'channel':'video_updater';
+		foreach($pdo->query("SELECT * FROM update_info WHERE name = '$name'") as $row) {
+			$last_update = $row[0];
 	    }
 	} catch (PDOException $e) {
 		var_dump($e->getMessage());
@@ -115,7 +121,7 @@ function set_channel_database(&$category_list, $table_name)
 
 function show_header(&$category_list) {
 
-	global $cur_category, $mode;
+	global $cur_category, $mode, $last_update;
 	echo '<header><div class="header-cont">
 	<img src="https://img.icons8.com/nolan/64/000000/video-call.png" width=40px height=40px><div class="site-title"><p>チャンネルずかん</p></div>';
 
@@ -202,15 +208,16 @@ function sort_rows(&$rows, $sort_target) {
 $category_list = array();
 
 if($mode == 'channel') {
-	set_channel_database($category_list, 'channel');
+	set_database($category_list, 'channel');
 } else {
-	set_channel_database($category_list, 'video');
+	set_database($category_list, 'video');
 }
 
 show_header($category_list);
 show_left_panel($category_list);
 
-echo "<main><h2>$cur_category</h2>";
+echo "<main><div class=\"cur-category\">$cur_category</div>
+		<span class=\"last-update\">Last updated  $last_update</span>";
 $sub_categories = $category_list[$cur_category];
 
 if($mode == 'channel') {

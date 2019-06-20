@@ -54,6 +54,7 @@ with db.get_connection() as conn:
 				print("delete")
 			print("%d %s %s %s" % (id, row['channel_title'],row['main_category'],row['sub_category']))
 		chan_sums_total = 0
+		db.check_should_update(conn, cur, 1, 'channel')
 		for category, value in chan_sums.items():
 			chan_sums_total += value
 			print("%s %d" % (category, value))

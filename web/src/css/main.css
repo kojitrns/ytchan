@@ -155,6 +155,19 @@ main {
 	margin-top: 3rem;
 }
 
+.cur-category {
+	margin-top: 1rem;
+	font-size: 1.8rem;
+	float: left;
+	font-weight: bold;
+}
+
+.last-update {
+	margin-top: 2.5rem;
+	margin-right: 2rem;
+	float: right;
+}
+
 .subcategory-zone {
 	margin-bottom: 1rem;
 }
@@ -162,6 +175,7 @@ main {
 .subcategory-zone h3{
 	margin-top: -3.4rem;
 	padding-top: 3.4rem;
+	clear: both;
 }
 .subcategory-zone:after {
 	clear: both;
@@ -286,6 +300,7 @@ main {
 
 .ytp {
 	margin-bottom: 2.5rem;
+	clear: both;
 }
 
 .video-box {
