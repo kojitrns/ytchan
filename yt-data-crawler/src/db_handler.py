@@ -52,8 +52,9 @@ def check_should_update(conn, cur, mod, name):
 	if row is not None:
 		count = int(row['count'])
 	cur.execute('DELETE FROM update_info  WHERE name = %s', (name,))
-	date = datetime.datetime.today().strftime("%Y/%m/%d %H:%M:%S")
-	cur.execute('INSERT INTO update_info VALUES (%s, %s, %s)', (date, str(count + 1), name))
+	jst_now= datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
+	jst_now = jst_now.strftime("%Y/%m/%d %H:%M:%S",)
+	cur.execute('INSERT INTO update_info VALUES (%s, %s, %s)', (jst_now, str(count + 1), name))
 	conn.commit()
 	return count%mod == 0
 
