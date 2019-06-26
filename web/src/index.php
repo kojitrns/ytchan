@@ -169,8 +169,7 @@ function show_right_panel()
 	echo '<div class="right-panel">
 	<p>Youtubeのいろんなチャンネルをまとめてます。最近の動画はここ１週間でアップされたものです。</p>
 	<form class="form-area" action="/message" accept-charset="UTF-8" method="post">
-	<textarea name="message" id="message" placeholder="サイトについてのご意見ご感想はこちらにどうぞ。">
-	</textarea>
+	<textarea name="message" id="message" placeholder="サイトについてのご意見ご感想はこちらにどうぞ。"></textarea>
 	<center>
 	<input type="hidden" name="category" value="'.$cur_category.'" />
 	<input type="hidden" name="mode" value="'.$mode.'" />
