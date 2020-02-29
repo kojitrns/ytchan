@@ -5,8 +5,7 @@ import pprint
 import requests
 
 reqPprefix = 'https://www.googleapis.com/youtube/v3/'
-api_key = 'AIzaSyD3R2gavNlItHEZWTt-_UOMEwFwMN5reiQ'
-
+api_key = 'AIzaSyAisjvEMDBsSosPXXVuOV1U1PcGqlomEvg'
 
 def get_channel_data(channel_id, retry_limit):
 	chan_data = requests.get(
