@@ -20,6 +20,7 @@ def get_channel_data(channel_id, retry_limit):
 		time.sleep(3)
 		return get_channel_data(channel_id, retry_limit - 1)
 
+	time.sleep(0.5)
 	return chan_data
 
 def get_latest_video_data(uplist_id, retry_limit):
@@ -36,12 +37,14 @@ def get_latest_video_data(uplist_id, retry_limit):
 		time.sleep(3)
 		return get_latest_video_data(uplist_id, retry_limit - 1)
 
+	time.sleep(0.5)
 	video_id = videos['snippet']['resourceId']['videoId']
 	video_data = requests.get(
 	    reqPprefix+'videos?', params={'key': api_key,
 	    'part': 'snippet,contentDetails,statistics',
 	    'id': video_id})
 	video_data = error_check(video_data)
+	time.sleep(0.5)
 
 	if video_data is None:
 		if retry_limit == 0:
